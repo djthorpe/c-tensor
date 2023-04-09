@@ -1,0 +1,106 @@
+#include <stdlib.h>
+#include <assert.h>
+#include <string.h>
+
+#include <tensor/tensor.h>
+#include "private.h"
+
+///////////////////////////////////////////////////////////////////////////////
+
+// Alignment of tensor pool memory on uint32_t boundary
+#define TENSOR_POOL_ALIGN 4
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct tensor_pool_instance
+{
+    uint32_t memsize;
+    uint32_t memused;
+    void *mem;
+    tensor_str_t* str;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+// Create a new tensor pool, returns NULL on error
+tensor_pool_t *tensor_pool_create(uint32_t memsize)
+{
+    assert(memsize > 0);
+
+    tensor_pool_t *pool = malloc(sizeof(tensor_pool_t));
+    if (pool == NULL)
+    {
+        return NULL;
+    }
+
+    pool->memsize = memsize;
+    pool->memused = 0;
+    pool->str = NULL;
+    pool->mem = malloc(memsize);
+    if (pool->mem == NULL)
+    {
+        free(pool);
+        return NULL;
+    }
+    return pool;
+}
+
+// Free resources from a tensor pool
+void tensor_pool_destroy(tensor_pool_t *pool)
+{
+    if (pool)
+    {
+        // Free string data
+        for (tensor_str_t *str = pool->str; str != NULL;)
+        {
+            tensor_str_t *next = str->next;
+            free(str->data);
+            str = next;
+        }
+        free(pool->mem);
+        free(pool);
+    }
+}
+
+// Allocate bytes on the pool, returns NULL if memory exhausted
+void* tensor_pool_alloc(tensor_pool_t* pool,size_t size)
+{
+    assert(pool != NULL);
+    assert(size > 0);
+
+    // Align size on boundary
+    size = (size + TENSOR_POOL_ALIGN - 1) & ~(TENSOR_POOL_ALIGN - 1);
+    if (pool->memused + size > pool->memsize)
+    {
+        return NULL;
+    }
+    void *ptr = pool->mem + pool->memused;
+    pool->memused += size;
+    return ptr;
+}
+
+// Allocate a new string in the pool and initialize the string to an empty
+// value. Return NULL if the allocation failed.
+tensor_str_t *tensor_pool_alloc_str(tensor_pool_t *pool, size_t size) {
+    assert(pool != NULL);
+    assert(size > 0);
+
+    // Allocate string
+    tensor_str_t *str = tensor_pool_alloc(pool, sizeof(tensor_str_t));
+    if (str == NULL) {
+        return NULL;
+    }
+
+    // Allocate string data - but not in the pool
+    str->data = malloc(size);
+    if (str->data == NULL) {
+        return NULL;
+    }
+
+    // Initialize string
+    str->size = size;
+    str->data = memset(str->data, 0, size);
+    str->next = pool->str;
+    pool->str = str;
+    return str;
+}
