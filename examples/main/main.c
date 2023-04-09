@@ -2,14 +2,19 @@
 #include <stdio.h>
 #include <assert.h>
 
-int main() {
+int main()
+{
     tensor_pool_t *pool = tensor_pool_create(1024);
     assert(pool != NULL);
 
-    tensor_t* t = tensor_create_int32(pool, (uint32_t[]){1,1,1,1,0});
-    assert(t);
+    tensor_t *a = tensor_int32(pool, 1);
+    assert(a);
 
-    printf("%s\n", tensor_cstring(tensor_describe(pool, t)));
+    tensor_t *b = tensor_int32_vec(pool, (int32_t[]){1, 2, 3}, 3);
+    assert(b);
+
+    printf("a=%s\n", tensor_cstring(tensor_describe(pool, a)));
+    printf("b=%s\n", tensor_cstring(tensor_describe(pool, b)));
 
     tensor_pool_destroy(pool);
     return 0;
