@@ -12,6 +12,7 @@ static void tensor_graph_visit(tensor_pool_t *pool, tensor_t *t)
     assert(t != NULL);
 
     // TODO: We don't visit the same node twice
+    // TODO: How do we check if the graph has circular dependencies?
 
     tensor_debug(t->pool, "tensor_graph_visit: %s\n", tensor_cstring(tensor_describe(pool, t)));
 
