@@ -12,16 +12,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-struct tensor_pool_instance
-{
-    uint32_t memsize;
-    uint32_t memused;
-    void *mem;
-    tensor_str_t* str;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
 // Create a new tensor pool, returns NULL on error
 tensor_pool_t *tensor_pool_create(uint32_t memsize)
 {

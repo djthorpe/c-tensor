@@ -31,6 +31,9 @@ typedef struct tensor_instance tensor_t;
 // Opaque pool of tensors
 typedef struct tensor_pool_instance tensor_pool_t;
 
+// Opaque graph
+typedef struct tensor_graph_instance tensor_graph_t;
+
 // Opaque string
 typedef struct tensor_str_instance tensor_str_t;
 
@@ -86,6 +89,15 @@ extern tensor_t *tensor_cast_float64(tensor_pool_t *pool, tensor_t *a);
 
 // Perform binary operations, returns NULL on error
 extern tensor_t *tensor_mul(tensor_pool_t *pool, tensor_t *a, tensor_t *b);
+
+///////////////////////////////////////////////////////////////////////////////
+// GRAPHS
+
+// Construct the graph which allows a to be evaluated, returns NULL on error
+extern tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *a);
+
+// Perform the evaluation and return the output node, returns NULL on error 
+extern tensor_t* tensor_evaluate(tensor_graph_t* graph);
 
 ///////////////////////////////////////////////////////////////////////////////
 // STRINGS

@@ -24,11 +24,13 @@ int main()
     tensor_t *d = tensor_mul(pool, b, c);
     assert(d);
 
-    printf("d=%s\n", tensor_cstring(tensor_describe(pool, d)));
-
     // Now we need to create a graph with d as the output, in order
     // to evaluate it
     tensor_graph_t *graph = tensor_graph_create(pool, d);
+    
+    // Returns the output tensor, which is d
+    tensor_t* output = tensor_evaluate(graph);
+    printf("output=%s\n", tensor_cstring(tensor_describe(pool, output)));
 
     tensor_pool_destroy(pool);
     return 0;

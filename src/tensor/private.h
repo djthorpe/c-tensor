@@ -1,4 +1,8 @@
+
+// Private declarations
 #include "debug.h"
+#include "graph.h"
 #include "pool.h"
-#include "tensor.h"
 #include "string.h"
+#include "tensor.h"
+
