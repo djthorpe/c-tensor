@@ -11,7 +11,6 @@ struct tensor_hashmap_node
 
 struct tensor_hashmap
 {
-    tensor_pool_t *pool;
     int size;
     struct tensor_hashmap_node **nodes;
 };
@@ -25,7 +24,7 @@ extern struct tensor_hashmap *tensor_hashmap_create(tensor_pool_t *pool, size_t 
 extern void *tensor_hashmap_get(struct tensor_hashmap *hashmap, void *key);
 
 // Put a value into the hashmap, returns the key or NULL on error
-extern void *tensor_hashmap_put(struct tensor_hashmap *hashmap, void *key, void *value);
+extern void *tensor_hashmap_put(tensor_pool_t *pool, struct tensor_hashmap *hashmap, void *key, void *value);
 
 ///////////////////////////////////////////////////////////////////////////////
 

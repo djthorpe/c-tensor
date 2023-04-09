@@ -40,7 +40,6 @@ struct tensor_hashmap *tensor_hashmap_create(tensor_pool_t *pool, size_t size)
     {
         hashmap->nodes[i] = NULL;
     }
-    hashmap->pool = pool;
 
     // Return success
     return hashmap;
@@ -68,8 +67,9 @@ void *tensor_hashmap_get(struct tensor_hashmap *hashmap, void* key)
 }
 
 // Put a value into the hashmap, returns the key or NULL on error
-void* tensor_hashmap_put(struct tensor_hashmap *hashmap, void* key, void *value)
+void* tensor_hashmap_put(tensor_pool_t* pool,struct tensor_hashmap *hashmap, void* key, void *value)
 {
+    assert(pool != NULL);
     assert(hashmap != NULL);
     assert(key != NULL);
 
@@ -88,7 +88,7 @@ void* tensor_hashmap_put(struct tensor_hashmap *hashmap, void* key, void *value)
     }
 
     // Insert a new node
-    hashmap->nodes[index] = tensor_pool_alloc(hashmap->pool, sizeof(struct tensor_hashmap_node), NULL);
+    hashmap->nodes[index] = tensor_pool_alloc(pool, sizeof(struct tensor_hashmap_node), NULL);
     if (hashmap->nodes[index] == NULL)
     {
         return NULL;

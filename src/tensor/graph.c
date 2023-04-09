@@ -6,15 +6,37 @@
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 
-static void* tensor_graph_visit(struct tensor_hashmap* visited, tensor_t *t)
+// Push a new tensor onto the stack and return the node
+static struct tensor_graph_node *tensor_graph_push(tensor_graph_t *graph, tensor_t *t)
+{
+    assert(graph != NULL);
+    assert(t != NULL);
+
+    struct tensor_graph_node *node = tensor_pool_alloc(graph->pool, sizeof(struct tensor_graph_node), NULL);
+    if (node == NULL)
+    {
+        return NULL;
+    }
+    node->tensor = t;
+    node->next = NULL;
+    if (graph->root != NULL)
+    {
+        node->next = graph->root;
+    }
+    graph->root = node;
+    return node;
+}
+
+static struct tensor_graph_node *tensor_graph_visit(tensor_graph_t *graph, struct tensor_hashmap *visited, tensor_t *t)
 {
     assert(visited != NULL);
     assert(t != NULL);
 
     // We don't visit the same node twice
-    if (tensor_hashmap_get(visited, t) != NULL)
+    struct tensor_graph_node *node = tensor_hashmap_get(visited, t);
+    if (node != NULL)
     {
-        return t;
+        return node;
     }
 
     // TODO: How do we check if the graph has circular dependencies?
@@ -22,26 +44,27 @@ static void* tensor_graph_visit(struct tensor_hashmap* visited, tensor_t *t)
     // Visit the dependencies
     if (t->a != NULL)
     {
-        if(!tensor_graph_visit(visited, t->a)) {
+        if (!tensor_graph_visit(graph, visited, t->a))
+        {
             return NULL;
         }
     }
     if (t->b != NULL)
     {
-        if(!tensor_graph_visit(visited, t->b)) {
+        if (!tensor_graph_visit(graph, visited, t->b))
+        {
             return NULL;
         }
     }
 
     // Mark the tensor as visited
-    if(!tensor_hashmap_put(visited, t, t)) {
+    if (!tensor_hashmap_put(graph->pool, visited, t, t))
+    {
         return NULL;
     }
 
-    // TODO: Push it onto the stack of evaluations
-    tensor_debug(visited->pool, "tensor_graph_visit: %s\n", tensor_cstring(tensor_describe(visited->pool, t)));
-
-    return t;
+    // Push it onto the stack of evaluations
+    return tensor_graph_push(graph, t);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,20 +82,28 @@ tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *t)
     {
         return NULL;
     }
+    graph->pool = pool;
 
-    // If a has no dependencies, then return t
+    // If a has no dependencies, then return graph with single node
     if (t->op == NONE)
     {
-        graph->root = t;
-        return graph;
+        if (!tensor_graph_push(graph, t))
+        {
+            return NULL;
+        }
+        else
+        {
+            return graph;
+        }
     }
     assert(t->a != NULL || t->b != NULL);
 
     // Create a hashmap so we can keep track of what's been visited
-    struct tensor_hashmap* visited = tensor_hashmap_create(pool, pool->nallocs);
+    struct tensor_hashmap *visited = tensor_hashmap_create(pool, pool->nallocs);
 
     // We go through all nodes in the graph
-    if(!tensor_graph_visit(visited, t)) {
+    if (!tensor_graph_visit(graph, visited, t))
+    {
         return NULL;
     }
 
@@ -80,11 +111,21 @@ tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *t)
     return graph;
 }
 
-// Perform the evaluation and return the output node (which has now been computed),
+// Perform the evaluation and return the output node
 // returns NULL on error
 tensor_t *tensor_evaluate(tensor_graph_t *graph)
 {
     assert(graph != NULL);
-    // Not yet implemented
-    return NULL;
+    assert(graph->root != NULL);
+
+    // TODO: We evaluate in the wrong order - should be reversed
+    struct tensor_graph_node *node = graph->root;
+    while (node != NULL)
+    {
+        tensor_debug(graph->pool,"Evaluating node %s\n",tensor_cstring(tensor_describe(graph->pool,node->tensor)));
+
+        // Move to the next node
+        node = node->next;
+    }
+    return graph->root->tensor;
 }

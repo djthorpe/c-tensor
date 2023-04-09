@@ -3,13 +3,21 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+struct tensor_graph_node
+{
+    // The current evaluation tensor
+    tensor_t *tensor;
+
+    // The next evaluation node
+    struct tensor_graph_node *next;
+};
+
 struct tensor_graph_instance
 {
-    tensor_t* root;
+    tensor_pool_t *pool;
+    struct tensor_graph_node *root;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 #endif
-
-
