@@ -7,6 +7,7 @@ int main() {
     assert(pool != NULL);
 
     tensor_t* t = tensor_create_int32(pool, (uint32_t[]){1,1,1,1,0});
+    assert(t);
 
     printf("%s\n", tensor_cstring(tensor_describe(pool, t)));
 

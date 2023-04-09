@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
+
 #include <tensor/tensor.h>
 #include "private.h"
 
@@ -68,6 +70,9 @@ static tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, 
         }
     }
 
+    // Check for limits
+    assert(size <= UINT32_MAX);
+
     // Return NULL if no dimensions or too many dimensions
     if (ndims == 0 || ndims > TENSOR_MAX_DIMS)
     {
@@ -87,18 +92,22 @@ static tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, 
     {
         return NULL;
     }
+    else
+    {
+        memset(t->data, 0, size * tensor_dtype_sizeof(dtype));
+    }
 
     // Set tensor properties
     t->dtype = dtype;
     t->ndims = ndims;
+    t->nvalues = size;
     for (uint8_t i = 0; i < ndims; i++)
     {
         t->dims[i] = dims[i];
     }
 
-    tensor_debug(pool, "dtype=%s ndims=%d size=%d\n", tensor_dtype_str(dtype), ndims, size);
-
-    return NULL;
+    // Return success
+    return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -134,10 +143,30 @@ inline tensor_t *tensor_create_float64(tensor_pool_t *pool, uint32_t *dims)
     return tensor_dtype_create(pool, FLOAT64_T, dims);
 }
 
-tensor_str_t *tensor_describe(tensor_pool_t *pool,tensor_t * tensor) {
+tensor_str_t *tensor_describe(tensor_pool_t *pool, tensor_t *tensor)
+{
     assert(pool != NULL);
     assert(tensor != NULL);
 
     tensor_str_t *str = tensor_sprintf(pool, "tensor<%s>", tensor_dtype_str(tensor->dtype));
+    if (str == NULL)
+    {
+        return NULL;
+    }
+
+    void *data = tensor->data;
+    for (uint8_t i = 0; i < tensor->nvalues; i++)
+    {
+        if(!tensor_strcat_dtype(str, tensor->dtype, data)) 
+        {
+            return NULL;
+        }
+        if(!tensor_strcat_cstr(str,",")) 
+        {
+            return NULL;
+        }
+        data += tensor_dtype_sizeof(tensor->dtype);
+    }
+
     return str;
 }

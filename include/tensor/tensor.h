@@ -70,6 +70,5 @@ extern tensor_t *tensor_add(tensor_t *a, tensor_t *b);
 
 extern const char *tensor_cstring(tensor_str_t *str);
 extern tensor_str_t *tensor_sprintf(tensor_pool_t *pool, const char *fmt, ...);
-tensor_str_t *tensor_describe(tensor_pool_t *pool,tensor_t * tensor);
-
+extern tensor_str_t *tensor_describe(tensor_pool_t *pool,tensor_t * tensor);
 #endif
