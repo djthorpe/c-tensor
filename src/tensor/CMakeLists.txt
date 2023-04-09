@@ -1,6 +1,7 @@
 add_library(tensor STATIC
     cast.c
     graph.c
+    hashmap.c
     mul.c
     pool.c
     string.c

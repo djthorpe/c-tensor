@@ -50,13 +50,29 @@ static const char *tensor_dtype_str(tensor_dtype_t dtype)
     }
 }
 
-static tensor_t *tensor_dtype_vec(tensor_pool_t *pool, tensor_dtype_t type,void* values, uint32_t nelems) {
+static const char *tensor_op_str(tensor_op_t op)
+{
+    switch (op)
+    {
+    case CAST:
+        return "cast";
+    case MUL_SCALAR:
+        return "mul_scalar";
+    case MUL_MATRIX:
+        return "mul_matrix";
+    default:
+        return "input";
+    }
+}
+
+static tensor_t *tensor_dtype_vec(tensor_pool_t *pool, tensor_dtype_t type, void *values, uint32_t nelems)
+{
     assert(pool != NULL);
     assert(values != NULL);
     assert(nelems > 0);
     assert(tensor_dtype_sizeof(type) > 0);
 
-    tensor_t *t = tensor_dtype_create(pool, type, (uint32_t[]){nelems,0});
+    tensor_t *t = tensor_dtype_create(pool, type, (uint32_t[]){nelems, 0});
     if (t == NULL)
     {
         return NULL;
@@ -99,7 +115,8 @@ tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_
     }
 
     // Allocate memory for tensor
-    tensor_t *t = tensor_pool_alloc(pool, sizeof(tensor_t));
+    uint32_t id;
+    tensor_t *t = tensor_pool_alloc(pool, sizeof(tensor_t), &id);
     if (t == NULL)
     {
         tensor_debug(pool, "tensor_dtype_create failed, out of memory allocating %ld bytes\n", sizeof(tensor_t));
@@ -107,7 +124,7 @@ tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_
     }
 
     // Allocate memory for data
-    t->data = tensor_pool_alloc(pool, size * tensor_dtype_sizeof(dtype));
+    t->data = tensor_pool_alloc(pool, size * tensor_dtype_sizeof(dtype), NULL);
     if (t->data == NULL)
     {
         tensor_debug(pool, "tensor_dtype_create failed, out of memory allocating %ld bytes\n", size * tensor_dtype_sizeof(dtype));
@@ -128,7 +145,8 @@ tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_
     }
     t->dims[ndims] = 0;
     t->op = NONE;
-    
+    t->id = id;
+
     // Return success
     return t;
 }
@@ -235,32 +253,32 @@ tensor_t *tensor_float64(tensor_pool_t *pool, double value)
     return t;
 }
 
-inline tensor_t *tensor_int32_vec(tensor_pool_t *pool, int32_t* values, uint32_t nelems)
+inline tensor_t *tensor_int32_vec(tensor_pool_t *pool, int32_t *values, uint32_t nelems)
 {
     return tensor_dtype_vec(pool, INT32_T, values, nelems);
 }
 
-inline tensor_t *tensor_uint32_vec(tensor_pool_t *pool, uint32_t* values, uint32_t nelems)
+inline tensor_t *tensor_uint32_vec(tensor_pool_t *pool, uint32_t *values, uint32_t nelems)
 {
     return tensor_dtype_vec(pool, UINT32_T, values, nelems);
 }
 
-inline tensor_t *tensor_int64_vec(tensor_pool_t *pool, int64_t* values, uint32_t nelems)
+inline tensor_t *tensor_int64_vec(tensor_pool_t *pool, int64_t *values, uint32_t nelems)
 {
     return tensor_dtype_vec(pool, INT64_T, values, nelems);
 }
 
-inline tensor_t *tensor_uint64_vec(tensor_pool_t *pool, uint64_t* values, uint32_t nelems)
+inline tensor_t *tensor_uint64_vec(tensor_pool_t *pool, uint64_t *values, uint32_t nelems)
 {
     return tensor_dtype_vec(pool, UINT64_T, values, nelems);
 }
 
-inline tensor_t *tensor_float32_vec(tensor_pool_t *pool, float* values, uint32_t nelems)
+inline tensor_t *tensor_float32_vec(tensor_pool_t *pool, float *values, uint32_t nelems)
 {
     return tensor_dtype_vec(pool, FLOAT32_T, values, nelems);
 }
 
-inline tensor_t *tensor_float64_vec(tensor_pool_t *pool, double* values, uint32_t nelems)
+inline tensor_t *tensor_float64_vec(tensor_pool_t *pool, double *values, uint32_t nelems)
 {
     return tensor_dtype_vec(pool, FLOAT64_T, values, nelems);
 }
@@ -270,7 +288,7 @@ tensor_str_t *tensor_describe(tensor_pool_t *pool, tensor_t *tensor)
     assert(pool != NULL);
     assert(tensor != NULL);
 
-    tensor_str_t *str = tensor_sprintf(pool, "tensor<%s>", tensor_dtype_str(tensor->dtype));
+    tensor_str_t *str = tensor_sprintf(pool, "tensor[%u]<op=%s dtype=%s>", tensor->id, tensor_op_str(tensor->op), tensor_dtype_str(tensor->dtype));
     if (str == NULL)
     {
         return NULL;
@@ -294,13 +312,15 @@ tensor_str_t *tensor_describe(tensor_pool_t *pool, tensor_t *tensor)
 }
 
 // Return true if the tensor is a scalar
-inline bool tensor_is_scalar(tensor_t *t) {
+inline bool tensor_is_scalar(tensor_t *t)
+{
     assert(t != NULL);
     return t->ndims == 1 && t->dims[0] == 1;
 }
 
 // Return true if the tensor is a vector
-inline bool tensor_is_vector(tensor_t *t) {
+inline bool tensor_is_vector(tensor_t *t)
+{
     assert(t != NULL);
     return t->ndims == 1 && t->dims[0] > 1;
 }

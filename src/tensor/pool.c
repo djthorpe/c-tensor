@@ -25,6 +25,7 @@ tensor_pool_t *tensor_pool_create(uint32_t memsize)
 
     pool->memsize = memsize;
     pool->memused = 0;
+    pool->nallocs = 0;
     pool->str = NULL;
     pool->mem = malloc(memsize);
     if (pool->mem == NULL)
@@ -53,7 +54,8 @@ void tensor_pool_destroy(tensor_pool_t *pool)
 }
 
 // Allocate bytes on the pool, returns NULL if memory exhausted
-void* tensor_pool_alloc(tensor_pool_t* pool,size_t size)
+// and set the id value if it's not NULL
+void* tensor_pool_alloc(tensor_pool_t* pool,size_t size, uint32_t* id)
 {
     assert(pool != NULL);
     assert(size > 0);
@@ -66,6 +68,13 @@ void* tensor_pool_alloc(tensor_pool_t* pool,size_t size)
     }
     void *ptr = pool->mem + pool->memused;
     pool->memused += size;
+
+    // Set id if not NULL, and increase the number of allocations
+    if (id != NULL)
+    {
+        *id = ++pool->nallocs;
+    }
+
     return ptr;
 }
 
@@ -76,7 +85,7 @@ tensor_str_t *tensor_pool_alloc_str(tensor_pool_t *pool, size_t size) {
     assert(size > 0);
 
     // Allocate string
-    tensor_str_t *str = tensor_pool_alloc(pool, sizeof(tensor_str_t));
+    tensor_str_t *str = tensor_pool_alloc(pool, sizeof(tensor_str_t), NULL);
     if (str == NULL) {
         return NULL;
     }

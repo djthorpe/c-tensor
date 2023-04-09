@@ -47,7 +47,8 @@ extern tensor_pool_t *tensor_pool_create(uint32_t memsize);
 extern void tensor_pool_destroy(tensor_pool_t *pool);
 
 // Allocate N bytes from the pool, returns NULL on error
-extern void *tensor_pool_alloc(tensor_pool_t *pool, size_t size);
+// and set a unique id for the allocation if id is not NULL
+extern void *tensor_pool_alloc(tensor_pool_t *pool, size_t size, uint32_t* id);
 
 ///////////////////////////////////////////////////////////////////////////////
 // TENSORS

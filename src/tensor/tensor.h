@@ -29,6 +29,9 @@ struct tensor_instance
     tensor_op_t op;
     tensor_t *a;
     tensor_t *b;
+
+    // ID
+    uint32_t id;
 };
 
 // Create a new tensor with given data type and dimensions, returns NULL on error

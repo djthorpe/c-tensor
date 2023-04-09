@@ -9,7 +9,12 @@ struct tensor_pool_instance
     uint32_t memsize;
     uint32_t memused;
     void *mem;
+
+    // The string pool is a linked list of strings
     tensor_str_t* str;
+
+    // The number of allocations
+    uint32_t nallocs;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -6,28 +6,42 @@
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 
-static void tensor_graph_visit(tensor_pool_t *pool, tensor_t *t)
+static void* tensor_graph_visit(struct tensor_hashmap* visited, tensor_t *t)
 {
-    assert(pool != NULL);
+    assert(visited != NULL);
     assert(t != NULL);
 
-    // TODO: We don't visit the same node twice
-    // TODO: How do we check if the graph has circular dependencies?
+    // We don't visit the same node twice
+    if (tensor_hashmap_get(visited, t) != NULL)
+    {
+        return t;
+    }
 
-    tensor_debug(t->pool, "tensor_graph_visit: %s\n", tensor_cstring(tensor_describe(pool, t)));
+    // TODO: How do we check if the graph has circular dependencies?
 
     // Visit the dependencies
     if (t->a != NULL)
     {
-        tensor_graph_visit(pool, t->a);
+        if(!tensor_graph_visit(visited, t->a)) {
+            return NULL;
+        }
     }
     if (t->b != NULL)
     {
-        tensor_graph_visit(pool, t->b);
+        if(!tensor_graph_visit(visited, t->b)) {
+            return NULL;
+        }
     }
 
-    // TODO: Mark the tensor as visited
+    // Mark the tensor as visited
+    if(!tensor_hashmap_put(visited, t, t)) {
+        return NULL;
+    }
+
     // TODO: Push it onto the stack of evaluations
+    tensor_debug(visited->pool, "tensor_graph_visit: %s\n", tensor_cstring(tensor_describe(visited->pool, t)));
+
+    return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,7 +54,7 @@ tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *t)
     assert(t != NULL);
 
     // Create a graph
-    tensor_graph_t *graph = tensor_pool_alloc(pool, sizeof(tensor_graph_t));
+    tensor_graph_t *graph = tensor_pool_alloc(pool, sizeof(tensor_graph_t), NULL);
     if (graph == NULL)
     {
         return NULL;
@@ -54,11 +68,16 @@ tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *t)
     }
     assert(t->a != NULL || t->b != NULL);
 
-    // We go through all nodes in the graph
-    tensor_graph_visit(pool, t);
+    // Create a hashmap so we can keep track of what's been visited
+    struct tensor_hashmap* visited = tensor_hashmap_create(pool, pool->nallocs);
 
-    // Not yet implemented
-    return NULL;
+    // We go through all nodes in the graph
+    if(!tensor_graph_visit(visited, t)) {
+        return NULL;
+    }
+
+    // Return the graph
+    return graph;
 }
 
 // Perform the evaluation and return the output node (which has now been computed),
