@@ -99,6 +99,7 @@ tensor_str_t* tensor_strcat_dtype(tensor_str_t *str, tensor_dtype_t dtype, void*
         return NULL;
     } else {
         str->data = new;
+        str->size += strlen(value_str);
     }
 
     // Append

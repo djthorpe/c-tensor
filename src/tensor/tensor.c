@@ -50,7 +50,25 @@ static const char *tensor_dtype_str(tensor_dtype_t dtype)
     }
 }
 
-static tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_t *dims)
+static tensor_t *tensor_dtype_vec(tensor_pool_t *pool, tensor_dtype_t type,void* values, uint32_t nelems) {
+    assert(pool != NULL);
+    assert(values != NULL);
+    assert(nelems > 0);
+    assert(tensor_dtype_sizeof(type) > 0);
+
+    tensor_t *t = tensor_dtype_create(pool, type, (uint32_t[]){nelems,0});
+    if (t == NULL)
+    {
+        return NULL;
+    }
+    memcpy(t->data, values, tensor_dtype_sizeof(type) * (size_t)nelems);
+    return t;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+
+tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_t *dims)
 {
     assert(pool != NULL);
     assert(dims != NULL);
@@ -108,29 +126,12 @@ static tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, 
     {
         t->dims[i] = dims[i];
     }
-
+    t->dims[ndims] = 0;
+    t->op = NONE;
+    
     // Return success
     return t;
 }
-
-
-static tensor_t *tensor_dtype_vec(tensor_pool_t *pool, tensor_dtype_t type,void* values, uint32_t nelems) {
-    assert(pool != NULL);
-    assert(values != NULL);
-    assert(nelems > 0);
-    assert(tensor_dtype_sizeof(type) > 0);
-
-    tensor_t *t = tensor_dtype_create(pool, type, (uint32_t[]){nelems,0});
-    if (t == NULL)
-    {
-        return NULL;
-    }
-    memcpy(t->data, values, tensor_dtype_sizeof(type) * (size_t)nelems);
-    return t;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// PUBLIC METHODS
 
 inline tensor_t *tensor_create_int32(tensor_pool_t *pool, uint32_t *dims)
 {
@@ -290,4 +291,16 @@ tensor_str_t *tensor_describe(tensor_pool_t *pool, tensor_t *tensor)
     }
 
     return str;
+}
+
+// Return true if the tensor is a scalar
+inline bool tensor_is_scalar(tensor_t *t) {
+    assert(t != NULL);
+    return t->ndims == 1 && t->dims[0] == 1;
+}
+
+// Return true if the tensor is a vector
+inline bool tensor_is_vector(tensor_t *t) {
+    assert(t != NULL);
+    return t->ndims == 1 && t->dims[0] > 1;
 }

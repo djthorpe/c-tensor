@@ -76,8 +76,16 @@ extern tensor_t *tensor_float64_vec(tensor_pool_t *pool, double* values, uint32_
 ///////////////////////////////////////////////////////////////////////////////
 // OPERATIONS
 
-// Create an operation node, returns NULL on error
-extern tensor_t *tensor_add(tensor_t *a, tensor_t *b);
+// Create an operation node to cast values, returns NULL on error
+extern tensor_t *tensor_cast_int32(tensor_pool_t *pool, tensor_t *a);
+extern tensor_t *tensor_cast_uint32(tensor_pool_t *pool, tensor_t *a);
+extern tensor_t *tensor_cast_int64(tensor_pool_t *pool, tensor_t *a);
+extern tensor_t *tensor_cast_uint64(tensor_pool_t *pool, tensor_t *a);
+extern tensor_t *tensor_cast_float32(tensor_pool_t *pool, tensor_t *a);
+extern tensor_t *tensor_cast_float64(tensor_pool_t *pool, tensor_t *a);
+
+// Perform binary operations, returns NULL on error
+extern tensor_t *tensor_mul(tensor_pool_t *pool, tensor_t *a, tensor_t *b);
 
 ///////////////////////////////////////////////////////////////////////////////
 // STRINGS
