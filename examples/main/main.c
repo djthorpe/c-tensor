@@ -29,7 +29,7 @@ int main()
     tensor_graph_t *graph = tensor_graph_create(pool, d);
     
     // Returns the output tensor, which is d
-    tensor_t* output = tensor_evaluate(graph);
+    tensor_t* output = tensor_graph_evaluate(graph);
     printf("output=%s\n", tensor_cstring(tensor_describe(pool, output)));
 
     tensor_pool_destroy(pool);

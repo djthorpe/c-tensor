@@ -43,4 +43,7 @@ bool tensor_is_scalar(tensor_t *t);
 // Return true if the tensor is a vector
 bool tensor_is_vector(tensor_t *t);
 
+// Evaluate the tensor
+void tensor_evaluate(tensor_pool_t *pool, tensor_t *t);
+
 #endif // TENSOR_TENSOR_H

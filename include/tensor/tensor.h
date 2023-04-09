@@ -98,7 +98,7 @@ extern tensor_t *tensor_mul(tensor_pool_t *pool, tensor_t *a, tensor_t *b);
 extern tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *a);
 
 // Perform the evaluation and return the output node, returns NULL on error 
-extern tensor_t* tensor_evaluate(tensor_graph_t* graph);
+extern tensor_t* tensor_graph_evaluate(tensor_graph_t* graph);
 
 ///////////////////////////////////////////////////////////////////////////////
 // STRINGS

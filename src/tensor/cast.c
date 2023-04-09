@@ -33,6 +33,10 @@ static tensor_t *tensor_cast(tensor_pool_t *pool, tensor_dtype_t type, tensor_t 
     return t;
 }
 
+static void tensor_cast_copy(void* dst,tensor_dtype_t dtype,void* src,tensor_dtype_t stype) {
+    // TODO: Copy data from dst to src
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC METHODS
 
@@ -64,4 +68,19 @@ inline tensor_t *tensor_cast_float32(tensor_pool_t *pool, tensor_t *a)
 inline tensor_t *tensor_cast_float64(tensor_pool_t *pool, tensor_t *a)
 {
     return tensor_cast(pool, FLOAT64_T, a);
+}
+
+void tensor_cast_op(tensor_pool_t *pool, tensor_t *t)
+{
+    assert(pool != NULL);
+    assert(t != NULL);
+    assert(t->a != NULL);
+    assert(t->nvalues == t->a->nvalues);
+
+    void *src = t->a->data;
+    void *dst = t->data;
+    for (uint32_t i = 0; i < t->nvalues; i++, src += tensor_dtype_sizeof(t->a->dtype), dst += tensor_dtype_sizeof(t->dtype))
+    {
+        tensor_cast_copy(dst, t->dtype, src, t->a->dtype);
+    }
 }

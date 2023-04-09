@@ -58,13 +58,22 @@ static struct tensor_graph_node *tensor_graph_visit(tensor_graph_t *graph, struc
     }
 
     // Mark the tensor as visited
-    if (!tensor_hashmap_put(graph->pool, visited, t, t))
+    if (!tensor_hashmap_put(graph->pool, visited, t, node))
     {
         return NULL;
     }
 
     // Push it onto the stack of evaluations
     return tensor_graph_push(graph, t);
+}
+
+static struct tensor_graph_node *tensor_graph_node_evaluate(tensor_graph_t *graph, struct tensor_graph_node *node)
+{
+    assert(graph != NULL);
+    assert(node != NULL);
+    assert(node->tensor != NULL);
+    tensor_debug(graph->pool, "Evaluating node %s\n", tensor_cstring(tensor_describe(graph->pool, node->tensor)));
+    tensor_evaluate(graph->pool, node->tensor);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -113,7 +122,7 @@ tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *t)
 
 // Perform the evaluation and return the output node
 // returns NULL on error
-tensor_t *tensor_evaluate(tensor_graph_t *graph)
+tensor_t *tensor_graph_evaluate(tensor_graph_t *graph)
 {
     assert(graph != NULL);
     assert(graph->root != NULL);
@@ -122,9 +131,8 @@ tensor_t *tensor_evaluate(tensor_graph_t *graph)
     struct tensor_graph_node *node = graph->root;
     while (node != NULL)
     {
-        tensor_debug(graph->pool,"Evaluating node %s\n",tensor_cstring(tensor_describe(graph->pool,node->tensor)));
-
-        // Move to the next node
+        // Evaluate the node and move to the next one
+        tensor_graph_node_evaluate(graph, node);
         node = node->next;
     }
     return graph->root->tensor;

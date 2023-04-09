@@ -1,5 +1,6 @@
 
 // Private declarations
+#include "cast.h"
 #include "debug.h"
 #include "graph.h"
 #include "hashmap.h"

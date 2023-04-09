@@ -42,9 +42,9 @@ static const char *tensor_dtype_str(tensor_dtype_t dtype)
     case INT64_T:
         return "int64_t";
     case FLOAT32_T:
-        return "float";
+        return "float32_t";
     case FLOAT64_T:
-        return "double";
+        return "float64_t";
     default:
         return NULL;
     }
@@ -323,4 +323,37 @@ inline bool tensor_is_vector(tensor_t *t)
 {
     assert(t != NULL);
     return t->ndims == 1 && t->dims[0] > 1;
+}
+
+// Evaluate the tensor values from the input tensors and the
+// operation. The tensor values are stored in the tensor data
+void tensor_evaluate(tensor_pool_t *pool, tensor_t *t) {
+    assert(pool != NULL);
+    assert(t != NULL);
+    switch(t->op) {
+        case NONE:
+            // This is an input node
+            break;
+        case CAST:
+            assert(t->a != NULL);
+            tensor_cast_op(pool, t);
+            break;
+        case MUL_MATRIX:
+            assert(t->a != NULL);
+            assert(t->b != NULL);
+            assert(t->a->dtype == t->b->dtype);
+            // TODO: Multiply two matrices with the same dimensions
+            tensor_debug(pool,"  tensor[%u] multiply tensor[%u] with tensor[%u]\n",t->id,t->a->id,t->b->id);
+            break;
+        case MUL_SCALAR:
+            assert(t->a != NULL);
+            assert(t->b != NULL);
+            assert(t->a->dtype == t->b->dtype);
+            assert(tensor_is_scalar(t->b));
+            // TODO: Multiply a matrix a with scalar values in b
+            tensor_debug(pool,"  tensor[%u] multiply tensor[%u] with scalar[%u]\n",t->id,t->a->id,t->b->id);
+            break;
+        default:
+            assert(false);
+    }
 }
