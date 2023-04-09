@@ -14,7 +14,8 @@ tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *a) {
     return NULL;
 }
 
-// Perform the evaluation and return the output node, returns NULL on error 
+// Perform the evaluation and return the output node (which has now been computed),
+// returns NULL on error 
 tensor_t* tensor_evaluate(tensor_graph_t* graph) {
     assert(graph != NULL);
     // Not yet implemented
