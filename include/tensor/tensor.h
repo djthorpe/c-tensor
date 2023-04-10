@@ -129,4 +129,7 @@ extern tensor_str_t *tensor_str_describe(tensor_pool_t *pool, tensor_t *tensor);
 // Print the tensor
 extern tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor);
 
+// Return the length of a string
+extern size_t tensor_str_len(tensor_str_t *str);
+
 #endif

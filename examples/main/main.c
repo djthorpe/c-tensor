@@ -33,6 +33,8 @@ int main()
            tensor_cstring(tensor_str_describe(pool, output)),
            tensor_cstring(tensor_str_print(pool, output)));
 
+    printf("Memory used=%lu bytes of %lu\n", tensor_pool_used(pool), tensor_pool_size(pool));
+
     tensor_pool_destroy(pool);
     return 0;
 }

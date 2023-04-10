@@ -1,6 +1,7 @@
 add_executable(test_tensor
     main.c
     pool.c
+    string.c
 )
 
 target_include_directories(test_tensor PRIVATE

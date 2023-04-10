@@ -103,7 +103,6 @@ tensor_str_t *tensor_str_describe(tensor_pool_t *pool, tensor_t *tensor)
         return NULL;
     }
 
-    // Deal with the scalar case
     if (tensor_is_scalar(tensor))
     {
         if (!tensor_strcat_cstr(str, " scalar>"))
@@ -136,23 +135,72 @@ tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor)
     assert(pool != NULL);
     assert(tensor != NULL);
 
-    tensor_str_t *str = tensor_str_printf(pool, "<tensor>");
+    tensor_str_t *str = tensor_str_printf(pool, "");
     if (str == NULL)
     {
         return NULL;
     }
 
     void *data = tensor->data;
+    uint32_t index[tensor->ndims];
+    memset(index, 0, sizeof(uint32_t) * tensor->ndims);
     for (uint8_t i = 0; i < tensor->nvalues; i++)
     {
+        // Print a '[' for each index which is zero
+        for (uint8_t j = 0; j < tensor->ndims; j++)
+        {
+            if (index[j] == 0)
+            {
+                if (!tensor_strcat_cstr(str, "["))
+                {
+                    return NULL;
+                }
+            }
+        }        
+
         if (!tensor_strcat_dtype(str, tensor->dtype, data))
         {
             return NULL;
         }
-        if (!tensor_strcat_cstr(str, ","))
+
+        // Print a ']' for each index which is maximum, else print a ,
+        bool printed_comma = true;
+        for (uint8_t j = 0; j < tensor->ndims; j++)
         {
-            return NULL;
+            if (index[j] == tensor->dims[j] - 1)
+            {
+                printed_comma = false;
+                if (!tensor_strcat_cstr(str, "]"))
+                {
+                    return NULL;
+                }
+            }
+        }        
+
+        // Append a value separator
+        if (printed_comma)
+        {
+            if (!tensor_strcat_cstr(str, ", "))
+            {
+                return NULL;
+            }
         }
+
+        // Increment the index
+        for (uint8_t j = 0; j < tensor->ndims; j++)
+        {
+            index[j]++;
+            if (index[j] < tensor->dims[j])
+            {
+                break;
+            }
+            else
+            {
+                index[j] = 0;
+            }
+        }
+
+        // Next element
         data += tensor_dtype_sizeof(tensor->dtype);
     }
 
@@ -251,3 +299,14 @@ tensor_str_t* tensor_strcat_printf(tensor_str_t *str, const char* fmt, ...) {
     // Return success
     return str;
 }
+
+// Return the length of a string
+inline size_t tensor_str_len(tensor_str_t *str) {
+    assert(str != NULL);
+    if (str->data == NULL) {
+        return 0;
+    }
+    // Size includes the null terminator
+    return str->size - 1;
+}
+
