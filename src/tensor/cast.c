@@ -27,7 +27,7 @@ static tensor_t *tensor_cast(tensor_pool_t *pool, tensor_dtype_t type, tensor_t 
         return NULL;
     }
 
-    // Set the operation to CAST, and dependecy to a
+    // Set the operation to CAST, and dependency to a
     t->op = CAST;
     t->a = a;
 

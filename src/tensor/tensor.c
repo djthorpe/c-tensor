@@ -325,16 +325,14 @@ bool tensor_evaluate(tensor_pool_t *pool, tensor_t *t)
         assert(t->a != NULL);
         assert(t->b != NULL);
         assert(t->a->dtype == t->b->dtype);
-        // TODO: Multiply two matrices with the same dimensions
-        tensor_debug(pool, "  tensor[%u] multiply tensor[%u] with tensor[%u]\n", t->id, t->a->id, t->b->id);
+        success = tensor_mul_op_matrix(pool, t);
         break;
     case MUL_SCALAR:
         assert(t->a != NULL);
         assert(t->b != NULL);
         assert(t->a->dtype == t->b->dtype);
         assert(tensor_is_scalar(t->b));
-        // TODO: Multiply a matrix a with scalar values in b
-        tensor_debug(pool, "  tensor[%u] multiply tensor[%u] with scalar[%u]\n", t->id, t->a->id, t->b->id);
+        success = tensor_mul_op_scalar(pool, t);
         break;
     default:
         assert(false);
