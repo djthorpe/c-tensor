@@ -9,6 +9,9 @@
 // Opaque csv_tokens type
 typedef struct tensor_csv_instance tensor_csv_t;
 
+// Opaque list of tokens
+typedef struct tensor_csv_token_instance tensor_csv_token_t;
+
 ///////////////////////////////////////////////////////////////////////////////
 
 // Create a CSV parser

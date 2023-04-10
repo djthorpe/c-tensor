@@ -1,5 +1,6 @@
 add_library(tensor_csv STATIC
     csv.c
+    tokens.c
 )
 
 target_include_directories(tensor_csv PRIVATE

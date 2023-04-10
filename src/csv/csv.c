@@ -18,6 +18,9 @@ struct tensor_csv_instance
 
     // Is in a double quoted string
     bool inquote;
+
+    // The linked list of tokens
+    tensor_csv_token_t *tokens;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,6 +40,8 @@ tensor_csv_t *tensor_csv_create(tensor_pool_t *pool, const char sep)
     csv->quote = '"';
     csv->nlines = 0;
     csv->inquote = false;
+    csv->tokens = NULL;
+
     return csv;
 }
 
@@ -73,8 +78,11 @@ bool tensor_csv_parseline(tensor_csv_t *csv, const char *line)
         char ch = *ptr;
         if (ch == csv->sep)
         {
-            printf("sep=%d ", i);
-        } else if(ch == csv->quote) {
+            // TODO
+            tensor_csv_sep(csv, line, d);
+        }
+        else if (ch == csv->quote)
+        {
             csv->inquote = true;
         }
     }
@@ -82,13 +90,15 @@ bool tensor_csv_parseline(tensor_csv_t *csv, const char *line)
 }
 
 // Get the number of lines read
-inline uint32_t tensor_csv_nlines(tensor_csv_t *csv) {
+inline uint32_t tensor_csv_nlines(tensor_csv_t *csv)
+{
     assert(csv != NULL);
     return csv->nlines;
 }
 
 // Check for end of row
-bool tensor_csv_eor(tensor_csv_t *csv) {
+bool tensor_csv_eor(tensor_csv_t *csv)
+{
     assert(csv != NULL);
     return !csv->inquote;
 }
