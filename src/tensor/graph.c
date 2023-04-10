@@ -77,12 +77,14 @@ static struct tensor_graph_node *tensor_graph_visit(tensor_graph_t *graph, struc
     return tensor_graph_push(graph, t);
 }
 
+// Evaluate a node and return the next node to evaluate
 static struct tensor_graph_node *tensor_graph_node_evaluate(tensor_graph_t *graph, struct tensor_graph_node *node)
 {
     assert(graph != NULL);
     assert(node != NULL);
     assert(node->tensor != NULL);
     tensor_debug(graph->pool, "Evaluating node %s\n", tensor_cstring(tensor_str_describe(graph->pool, node->tensor)));
+    // TODO: Handle the error condition
     tensor_evaluate(graph->pool, node->tensor);
     return node->next;
 }

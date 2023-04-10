@@ -30,7 +30,7 @@ struct tensor_instance
     tensor_t *a;
     tensor_t *b;
 
-    // ID
+    // ID and name
     uint32_t id;
 };
 
@@ -43,8 +43,8 @@ bool tensor_is_scalar(tensor_t *t);
 // Return true if the tensor is a vector
 bool tensor_is_vector(tensor_t *t);
 
-// Evaluate the tensor
-void tensor_evaluate(tensor_pool_t *pool, tensor_t *t);
+// Evaluate the tensor, return true on success
+bool tensor_evaluate(tensor_pool_t *pool, tensor_t *t);
 
 // Return the data type size
 size_t tensor_dtype_sizeof(tensor_dtype_t dtype);

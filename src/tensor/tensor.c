@@ -27,6 +27,11 @@ static tensor_t *tensor_dtype_vec(tensor_pool_t *pool, tensor_dtype_t type, void
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC METHODS
 
+// Unique identifier for a tensor
+inline uint32_t tensor_id(tensor_t *t) {
+    assert(t != NULL);
+    return t->id;
+}
 
 const char *tensor_dtype_str(tensor_dtype_t dtype)
 {
@@ -300,18 +305,21 @@ inline bool tensor_is_vector(tensor_t *t)
 
 // Evaluate the tensor values from the input tensors and the
 // operation. The tensor values are stored in the tensor data
-void tensor_evaluate(tensor_pool_t *pool, tensor_t *t)
+// return true on successful evaluation
+bool tensor_evaluate(tensor_pool_t *pool, tensor_t *t)
 {
     assert(pool != NULL);
     assert(t != NULL);
+    bool success = false;
+
     switch (t->op)
     {
     case NONE:
-        // This is an input node
+        success = true;
         break;
     case CAST:
         assert(t->a != NULL);
-        tensor_cast_op(pool, t);
+        success = tensor_cast_op(pool, t);
         break;
     case MUL_MATRIX:
         assert(t->a != NULL);
@@ -331,7 +339,12 @@ void tensor_evaluate(tensor_pool_t *pool, tensor_t *t)
     default:
         assert(false);
     }
-    tensor_debug(pool, "  tensor_evaluate: %s\n", tensor_cstring(tensor_str_print(pool, t)));
+    if(success) {
+        tensor_debug(pool, "  tensor_evaluate: %s\n", tensor_cstring(tensor_str_print(pool, t)));
+    } else {
+        tensor_debug(pool, "  tensor_evaluate: failed for %s\n", tensor_cstring(tensor_str_describe(pool, t)));
+    }
+    return success;
 }
 
 // Return a scalar tensor with the value of the tensor

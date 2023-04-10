@@ -40,6 +40,9 @@ typedef struct tensor_str_instance tensor_str_t;
 ///////////////////////////////////////////////////////////////////////////////
 // TENSORS
 
+// Unique identifier for a tensor
+extern uint32_t tensor_id(tensor_t *t);
+
 // Create a value node, returns NULL on error
 extern tensor_t *tensor_create_int32(tensor_pool_t *pool, uint32_t *dims);
 extern tensor_t *tensor_create_uint32(tensor_pool_t *pool, uint32_t *dims);

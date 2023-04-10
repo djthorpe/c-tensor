@@ -82,3 +82,32 @@ tensor_t *tensor_mul(tensor_pool_t *pool, tensor_t *a, tensor_t *b)
 
     return t;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS - EVALUATE
+
+bool tensor_mul_op_scalar(tensor_pool_t *pool, tensor_t *t)
+{
+    assert(pool != NULL);
+    assert(t != NULL);
+    assert(t->a != NULL);
+    assert(t->b != NULL);
+    assert(t->dtype == t->a->dtype && t->a->dtype == t->b->dtype);
+    assert(tensor_is_scalar(t->b));
+
+    // Success
+    return false;
+}
+
+bool tensor_mul_op_matrix(tensor_pool_t *pool, tensor_t *t)
+{
+    assert(pool != NULL);
+    assert(t != NULL);
+    assert(t->a != NULL);
+    assert(t->b != NULL);
+    assert(t->dtype == t->a->dtype &&  t->a->dtype == t->b->dtype);
+    assert(t->ndims == t->a->ndims && t->a->ndims == t->b->ndims);
+
+    // Success
+    return false;
+}
