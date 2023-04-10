@@ -11,3 +11,4 @@ add_subdirectory(test/tensor)
 # Examples
 add_subdirectory(examples/main)
 add_subdirectory(examples/names)
+add_subdirectory(examples/xor)

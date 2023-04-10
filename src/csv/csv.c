@@ -1,6 +1,7 @@
 
-#include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
 
 #include <tensor/tensor.h>
 #include <tensor/csv.h>
@@ -22,6 +23,14 @@ struct tensor_csv_instance
     // The linked list of tokens
     tensor_csv_token_t *tokens;
 };
+
+///////////////////////////////////////////////////////////////////////////////
+// PRIVATE METHODS
+
+void tensor_csv_sep(tensor_csv_t *csv, const char *line, int d)
+{
+    printf("sep %d ",d);
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC METHODS
@@ -79,7 +88,7 @@ bool tensor_csv_parseline(tensor_csv_t *csv, const char *line)
         if (ch == csv->sep)
         {
             // TODO
-            tensor_csv_sep(csv, line, d);
+            tensor_csv_sep(csv, line, i);
         }
         else if (ch == csv->quote)
         {
