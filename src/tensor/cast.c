@@ -269,7 +269,7 @@ tensor_t *tensor_cast(tensor_pool_t *pool,  tensor_dtype_t type,tensor_t *a)
     }
 
     // Create a new tensor with the same dimensions
-    tensor_t *t = tensor_dtype_create(pool, type, a->dims);
+    tensor_t *t = tensor_dtype_create(pool, type, a->dims, NULL);
     if (t == NULL)
     {
         return NULL;

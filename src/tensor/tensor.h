@@ -34,14 +34,10 @@ struct tensor_instance
     uint32_t id;
 };
 
-// Create a new tensor with given data type and dimensions, returns NULL on error
-tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_t *dims);
-
-// Return true if the tensor is a scalar
-bool tensor_is_scalar(tensor_t *t);
-
-// Return true if the tensor is a vector
-bool tensor_is_vector(tensor_t *t);
+// Create a new tensor with given data type and dimensions. If dims is NULL then
+// a scalar is created. If elems is NULL then the tensor is created with zeros.
+// If elems is not NULL then it is assigned as initial values.
+tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_t *dims, void *elems);
 
 // Evaluate the tensor, return true on success
 bool tensor_evaluate(tensor_pool_t *pool, tensor_t *t);

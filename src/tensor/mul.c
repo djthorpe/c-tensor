@@ -15,7 +15,7 @@ static tensor_t *tensor_mul_scalar(tensor_pool_t *pool, tensor_t *a, tensor_t *b
     assert(b != NULL);
 
     // Create a new tensor with the same dimensions
-    tensor_t *t = tensor_dtype_create(pool, a->dtype, a->dims);
+    tensor_t *t = tensor_dtype_create(pool, a->dtype, a->dims, NULL);
     if (t == NULL)
     {
         return NULL;
@@ -73,7 +73,7 @@ tensor_t *tensor_mul(tensor_pool_t *pool, tensor_t *a, tensor_t *b)
     }
 
     // Create a new tensor with the same dimensions
-    tensor_t *t = tensor_dtype_create(pool, a->dtype, a->dims);
+    tensor_t *t = tensor_dtype_create(pool, a->dtype, a->dims, NULL);
     if (t == NULL)
     {
         return NULL;

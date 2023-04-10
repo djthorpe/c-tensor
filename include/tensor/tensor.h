@@ -43,13 +43,12 @@ typedef struct tensor_str_instance tensor_str_t;
 // Unique identifier for a tensor
 extern uint32_t tensor_id(tensor_t *t);
 
-// Create a value node, returns NULL on error
-extern tensor_t *tensor_create_int32(tensor_pool_t *pool, uint32_t *dims);
-extern tensor_t *tensor_create_uint32(tensor_pool_t *pool, uint32_t *dims);
-extern tensor_t *tensor_create_int64(tensor_pool_t *pool, uint32_t *dims);
-extern tensor_t *tensor_create_uint64(tensor_pool_t *pool, uint32_t *dims);
-extern tensor_t *tensor_create_float32(tensor_pool_t *pool, uint32_t *dims);
-extern tensor_t *tensor_create_float64(tensor_pool_t *pool, uint32_t *dims);
+// Return dimension propoerties
+extern bool tensor_is_scalar(tensor_t *t);
+extern bool tensor_is_vector(tensor_t *t);
+
+// Create a tensor, returns NULL on error
+extern tensor_t *tensor_create(tensor_pool_t *pool, tensor_dtype_t type, uint32_t *dims);
 
 // Create a scalar with given value, returns NULL on error
 extern tensor_t *tensor_int32(tensor_pool_t *pool, int32_t value);

@@ -2,6 +2,7 @@ add_executable(test_tensor
     csv.c
     main.c
     pool.c
+    scalar.c
     string.c
 )
 
