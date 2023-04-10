@@ -181,6 +181,8 @@ bool tensor_mul_op_matrix(tensor_pool_t *pool, tensor_t *t)
     assert(t->dtype == t->a->dtype && t->a->dtype == t->b->dtype);
     assert(t->ndims == t->a->ndims && t->a->ndims == t->b->ndims);
 
+    // TODO: Implement matrix multiplication
+
     // Success
     return false;
 }
