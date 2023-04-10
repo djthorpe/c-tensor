@@ -156,7 +156,7 @@ tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor)
                     return NULL;
                 }
             }
-        }        
+        }
 
         if (!tensor_strcat_dtype(str, tensor->dtype, data))
         {
@@ -175,7 +175,7 @@ tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor)
                     return NULL;
                 }
             }
-        }        
+        }
 
         // Append a value separator
         if (printed_comma)
@@ -265,10 +265,10 @@ tensor_str_t *tensor_strcat_cstr(tensor_str_t *str, const char *value)
     return str;
 }
 
-
 // Concatenate a printf value to a string. Returns the string
 // again or NULL if the allocation failed.
-tensor_str_t* tensor_strcat_printf(tensor_str_t *str, const char* fmt, ...) {
+tensor_str_t *tensor_strcat_printf(tensor_str_t *str, const char *fmt, ...)
+{
     assert(str != NULL);
     assert(fmt != NULL);
 
@@ -301,12 +301,13 @@ tensor_str_t* tensor_strcat_printf(tensor_str_t *str, const char* fmt, ...) {
 }
 
 // Return the length of a string
-inline size_t tensor_str_len(tensor_str_t *str) {
+inline size_t tensor_str_len(tensor_str_t *str)
+{
     assert(str != NULL);
-    if (str->data == NULL) {
+    if (str->data == NULL)
+    {
         return 0;
     }
     // Size includes the null terminator
     return str->size - 1;
 }
-

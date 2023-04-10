@@ -64,6 +64,7 @@ void* tensor_pool_alloc(tensor_pool_t* pool,size_t size, uint32_t* id)
     size = (size + TENSOR_POOL_ALIGN - 1) & ~(TENSOR_POOL_ALIGN - 1);
     if (pool->memused + size > pool->memsize)
     {
+        tensor_debug(pool, "tensor_pool_alloc: memory exhausted, size=%d, used=%d, total=%d\n", size, pool->memused, pool->memsize);
         return NULL;
     }
     void *ptr = pool->mem + pool->memused;

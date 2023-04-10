@@ -257,7 +257,7 @@ static inline bool tensor_cast_copy(void *dst, tensor_dtype_t dtype, void *src, 
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC METHODS - CREATE
 
-tensor_t *tensor_cast(tensor_pool_t *pool,  tensor_dtype_t type,tensor_t *a)
+tensor_t *tensor_cast(tensor_pool_t *pool, tensor_dtype_t type, tensor_t *a)
 {
     assert(pool != NULL);
     assert(a != NULL);
