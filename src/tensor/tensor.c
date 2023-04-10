@@ -8,28 +8,27 @@
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 
-static size_t tensor_dtype_sizeof(tensor_dtype_t dtype)
+static tensor_t *tensor_dtype_vec(tensor_pool_t *pool, tensor_dtype_t type, void *values, uint32_t nelems)
 {
-    switch (dtype)
+    assert(pool != NULL);
+    assert(values != NULL);
+    assert(nelems > 0);
+    assert(tensor_dtype_sizeof(type) > 0);
+
+    tensor_t *t = tensor_dtype_create(pool, type, (uint32_t[]){nelems, 0});
+    if (t == NULL)
     {
-    case UINT32_T:
-        return sizeof(uint32_t);
-    case INT32_T:
-        return sizeof(int32_t);
-    case UINT64_T:
-        return sizeof(uint64_t);
-    case INT64_T:
-        return sizeof(int64_t);
-    case FLOAT32_T:
-        return sizeof(float);
-    case FLOAT64_T:
-        return sizeof(double);
-    default:
-        return 0;
+        return NULL;
     }
+    memcpy(t->data, values, tensor_dtype_sizeof(type) * (size_t)nelems);
+    return t;
 }
 
-static const char *tensor_dtype_str(tensor_dtype_t dtype)
+///////////////////////////////////////////////////////////////////////////////
+// PUBLIC METHODS
+
+
+const char *tensor_dtype_str(tensor_dtype_t dtype)
 {
     switch (dtype)
     {
@@ -50,7 +49,7 @@ static const char *tensor_dtype_str(tensor_dtype_t dtype)
     }
 }
 
-static const char *tensor_op_str(tensor_op_t op)
+const char *tensor_op_str(tensor_op_t op)
 {
     switch (op)
     {
@@ -65,24 +64,26 @@ static const char *tensor_op_str(tensor_op_t op)
     }
 }
 
-static tensor_t *tensor_dtype_vec(tensor_pool_t *pool, tensor_dtype_t type, void *values, uint32_t nelems)
+size_t tensor_dtype_sizeof(tensor_dtype_t dtype)
 {
-    assert(pool != NULL);
-    assert(values != NULL);
-    assert(nelems > 0);
-    assert(tensor_dtype_sizeof(type) > 0);
-
-    tensor_t *t = tensor_dtype_create(pool, type, (uint32_t[]){nelems, 0});
-    if (t == NULL)
+    switch (dtype)
     {
-        return NULL;
+    case UINT32_T:
+        return sizeof(uint32_t);
+    case INT32_T:
+        return sizeof(int32_t);
+    case UINT64_T:
+        return sizeof(uint64_t);
+    case INT64_T:
+        return sizeof(int64_t);
+    case FLOAT32_T:
+        return sizeof(float);
+    case FLOAT64_T:
+        return sizeof(double);
+    default:
+        return 0;
     }
-    memcpy(t->data, values, tensor_dtype_sizeof(type) * (size_t)nelems);
-    return t;
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// PUBLIC METHODS
 
 tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_t *dims)
 {
@@ -283,34 +284,6 @@ inline tensor_t *tensor_float64_vec(tensor_pool_t *pool, double *values, uint32_
     return tensor_dtype_vec(pool, FLOAT64_T, values, nelems);
 }
 
-tensor_str_t *tensor_describe(tensor_pool_t *pool, tensor_t *tensor)
-{
-    assert(pool != NULL);
-    assert(tensor != NULL);
-
-    tensor_str_t *str = tensor_sprintf(pool, "tensor[%u]<op=%s dtype=%s>", tensor->id, tensor_op_str(tensor->op), tensor_dtype_str(tensor->dtype));
-    if (str == NULL)
-    {
-        return NULL;
-    }
-
-    void *data = tensor->data;
-    for (uint8_t i = 0; i < tensor->nvalues; i++)
-    {
-        if (!tensor_strcat_dtype(str, tensor->dtype, data))
-        {
-            return NULL;
-        }
-        if (!tensor_strcat_cstr(str, ","))
-        {
-            return NULL;
-        }
-        data += tensor_dtype_sizeof(tensor->dtype);
-    }
-
-    return str;
-}
-
 // Return true if the tensor is a scalar
 inline bool tensor_is_scalar(tensor_t *t)
 {
@@ -327,33 +300,78 @@ inline bool tensor_is_vector(tensor_t *t)
 
 // Evaluate the tensor values from the input tensors and the
 // operation. The tensor values are stored in the tensor data
-void tensor_evaluate(tensor_pool_t *pool, tensor_t *t) {
+void tensor_evaluate(tensor_pool_t *pool, tensor_t *t)
+{
     assert(pool != NULL);
     assert(t != NULL);
-    switch(t->op) {
-        case NONE:
-            // This is an input node
-            break;
-        case CAST:
-            assert(t->a != NULL);
-            tensor_cast_op(pool, t);
-            break;
-        case MUL_MATRIX:
-            assert(t->a != NULL);
-            assert(t->b != NULL);
-            assert(t->a->dtype == t->b->dtype);
-            // TODO: Multiply two matrices with the same dimensions
-            tensor_debug(pool,"  tensor[%u] multiply tensor[%u] with tensor[%u]\n",t->id,t->a->id,t->b->id);
-            break;
-        case MUL_SCALAR:
-            assert(t->a != NULL);
-            assert(t->b != NULL);
-            assert(t->a->dtype == t->b->dtype);
-            assert(tensor_is_scalar(t->b));
-            // TODO: Multiply a matrix a with scalar values in b
-            tensor_debug(pool,"  tensor[%u] multiply tensor[%u] with scalar[%u]\n",t->id,t->a->id,t->b->id);
-            break;
-        default:
-            assert(false);
+    switch (t->op)
+    {
+    case NONE:
+        // This is an input node
+        break;
+    case CAST:
+        assert(t->a != NULL);
+        tensor_cast_op(pool, t);
+        break;
+    case MUL_MATRIX:
+        assert(t->a != NULL);
+        assert(t->b != NULL);
+        assert(t->a->dtype == t->b->dtype);
+        // TODO: Multiply two matrices with the same dimensions
+        tensor_debug(pool, "  tensor[%u] multiply tensor[%u] with tensor[%u]\n", t->id, t->a->id, t->b->id);
+        break;
+    case MUL_SCALAR:
+        assert(t->a != NULL);
+        assert(t->b != NULL);
+        assert(t->a->dtype == t->b->dtype);
+        assert(tensor_is_scalar(t->b));
+        // TODO: Multiply a matrix a with scalar values in b
+        tensor_debug(pool, "  tensor[%u] multiply tensor[%u] with scalar[%u]\n", t->id, t->a->id, t->b->id);
+        break;
+    default:
+        assert(false);
     }
+    tensor_debug(pool, "  tensor_evaluate: %s\n", tensor_cstring(tensor_str_print(pool, t)));
+}
+
+// Return a scalar tensor with the value of the tensor
+inline int32_t tensor_int32_value(tensor_t *t)
+{
+    assert(t != NULL);
+    assert(t->dtype == INT32_T);
+    assert(tensor_is_scalar(t));
+    return *((int32_t *)t->data);
+}
+
+inline uint32_t tensor_uint32_value(tensor_t *t) {
+    assert(t != NULL);
+    assert(t->dtype == UINT32_T);
+    assert(tensor_is_scalar(t));
+    return *((uint32_t *)t->data);
+}
+
+inline int64_t tensor_int64_value(tensor_t *t) {
+    assert(t != NULL);
+    assert(t->dtype == INT64_T);
+    assert(tensor_is_scalar(t));
+    return *((int64_t *)t->data);
+}
+inline uint64_t tensor_uint64_value(tensor_t *t) {
+    assert(t != NULL);
+    assert(t->dtype == UINT64_T);
+    assert(tensor_is_scalar(t));
+    return *((uint64_t *)t->data);
+}
+inline float tensor_float32_value(tensor_t *t) {
+    assert(t != NULL);
+    assert(t->dtype == FLOAT32_T);
+    assert(tensor_is_scalar(t));
+    return *((float *)t->data);
+}
+
+inline double tensor_float64_value(tensor_t *t) {
+    assert(t != NULL);
+    assert(t->dtype == FLOAT64_T);
+    assert(tensor_is_scalar(t));
+    return *((double *)t->data);
 }

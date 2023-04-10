@@ -38,19 +38,6 @@ typedef struct tensor_graph_instance tensor_graph_t;
 typedef struct tensor_str_instance tensor_str_t;
 
 ///////////////////////////////////////////////////////////////////////////////
-// MEMORY POOL
-
-// Create a new tensor pool, returns NULL on error
-extern tensor_pool_t *tensor_pool_create(uint32_t memsize);
-
-// Destroy tensor pool
-extern void tensor_pool_destroy(tensor_pool_t *pool);
-
-// Allocate N bytes from the pool, returns NULL on error
-// and set a unique id for the allocation if id is not NULL
-extern void *tensor_pool_alloc(tensor_pool_t *pool, size_t size, uint32_t* id);
-
-///////////////////////////////////////////////////////////////////////////////
 // TENSORS
 
 // Create a value node, returns NULL on error
@@ -68,6 +55,14 @@ extern tensor_t *tensor_int64(tensor_pool_t *pool, int64_t value);
 extern tensor_t *tensor_uint64(tensor_pool_t *pool, uint64_t value);
 extern tensor_t *tensor_float32(tensor_pool_t *pool, float value);
 extern tensor_t *tensor_float64(tensor_pool_t *pool, double value);
+
+// Return scalar value
+extern int32_t tensor_int32_value(tensor_t *t);
+extern uint32_t tensor_uint32_value(tensor_t *t);
+extern int64_t tensor_int64_value(tensor_t *t);
+extern uint64_t tensor_uint64_value(tensor_t *t);
+extern float tensor_float32_value(tensor_t *t);
+extern double tensor_float64_value(tensor_t *t);
 
 // Create a vector with given values, returns NULL on error
 extern tensor_t *tensor_int32_vec(tensor_pool_t *pool, int32_t *values, uint32_t nelems);
@@ -101,9 +96,37 @@ extern tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *a);
 extern tensor_t* tensor_graph_evaluate(tensor_graph_t* graph);
 
 ///////////////////////////////////////////////////////////////////////////////
+// POOL
+
+// Create a new tensor pool, returns NULL on error
+extern tensor_pool_t *tensor_pool_create(uint32_t memsize);
+
+// Destroy tensor pool
+extern void tensor_pool_destroy(tensor_pool_t *pool);
+
+// Allocate N bytes from the pool, returns NULL on error
+// and set a unique id for the allocation if id is not NULL
+extern void *tensor_pool_alloc(tensor_pool_t *pool, size_t size, uint32_t* id);
+
+// Return size of memory pool
+extern size_t tensor_pool_size(tensor_pool_t *pool);
+
+// Return used bytes of memory pool
+extern size_t tensor_pool_used(tensor_pool_t *pool);
+
+///////////////////////////////////////////////////////////////////////////////
 // STRINGS
 
+// Return the string as a cstring
 extern const char *tensor_cstring(tensor_str_t *str);
-extern tensor_str_t *tensor_sprintf(tensor_pool_t *pool, const char *fmt, ...);
-extern tensor_str_t *tensor_describe(tensor_pool_t *pool, tensor_t *tensor);
+
+// Return a string from a printf-like format
+extern tensor_str_t *tensor_str_printf(tensor_pool_t *pool, const char *fmt, ...);
+
+// Describe the tensor (id, type, op, dimensions)
+extern tensor_str_t *tensor_str_describe(tensor_pool_t *pool, tensor_t *tensor);
+
+// Print the tensor
+extern tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor);
+
 #endif

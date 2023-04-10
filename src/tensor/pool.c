@@ -7,8 +7,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// Alignment of tensor pool memory on uint32_t boundary
-#define TENSOR_POOL_ALIGN 4
+// Alignment of tensor pool memory on uint64_t boundary
+#define TENSOR_POOL_ALIGN 8
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -102,4 +102,16 @@ tensor_str_t *tensor_pool_alloc_str(tensor_pool_t *pool, size_t size) {
     str->next = pool->str;
     pool->str = str;
     return str;
+}
+
+// Return size of memory pool
+inline size_t tensor_pool_size(tensor_pool_t *pool) {
+    assert(pool != NULL);
+    return pool->memsize;
+}
+
+// Return used bytes of memory pool
+inline size_t tensor_pool_used(tensor_pool_t *pool) {
+    assert(pool != NULL);
+    return pool->memused;
 }
