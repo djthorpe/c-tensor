@@ -9,31 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 
-static tensor_t *tensor_cast(tensor_pool_t *pool, tensor_dtype_t type, tensor_t *a)
-{
-    assert(pool != NULL);
-    assert(a != NULL);
-
-    // Return same tensor if already same type
-    if (a->dtype == type)
-    {
-        return a;
-    }
-
-    // Create a new tensor with the same dimensions
-    tensor_t *t = tensor_dtype_create(pool, type, a->dims);
-    if (t == NULL)
-    {
-        return NULL;
-    }
-
-    // Set the operation to CAST, and dependency to a
-    t->op = CAST;
-    t->a = a;
-
-    return t;
-}
-
 static inline bool tensor_cast_copy_int32(void *dst, tensor_dtype_t dtype, int32_t src)
 {
     switch (dtype)
@@ -282,34 +257,29 @@ static inline bool tensor_cast_copy(void *dst, tensor_dtype_t dtype, void *src, 
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC METHODS - CREATE
 
-inline tensor_t *tensor_cast_int32(tensor_pool_t *pool, tensor_t *a)
+tensor_t *tensor_cast(tensor_pool_t *pool,  tensor_dtype_t type,tensor_t *a)
 {
-    return tensor_cast(pool, INT32_T, a);
-}
+    assert(pool != NULL);
+    assert(a != NULL);
 
-inline tensor_t *tensor_cast_uint32(tensor_pool_t *pool, tensor_t *a)
-{
-    return tensor_cast(pool, UINT32_T, a);
-}
+    // Return same tensor if already same type
+    if (a->dtype == type)
+    {
+        return a;
+    }
 
-inline tensor_t *tensor_cast_int64(tensor_pool_t *pool, tensor_t *a)
-{
-    return tensor_cast(pool, INT64_T, a);
-}
+    // Create a new tensor with the same dimensions
+    tensor_t *t = tensor_dtype_create(pool, type, a->dims);
+    if (t == NULL)
+    {
+        return NULL;
+    }
 
-inline tensor_t *tensor_cast_uint64(tensor_pool_t *pool, tensor_t *a)
-{
-    return tensor_cast(pool, UINT64_T, a);
-}
+    // Set the operation to CAST, and dependency to a
+    t->op = CAST;
+    t->a = a;
 
-inline tensor_t *tensor_cast_float32(tensor_pool_t *pool, tensor_t *a)
-{
-    return tensor_cast(pool, FLOAT32_T, a);
-}
-
-inline tensor_t *tensor_cast_float64(tensor_pool_t *pool, tensor_t *a)
-{
-    return tensor_cast(pool, FLOAT64_T, a);
+    return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

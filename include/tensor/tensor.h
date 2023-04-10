@@ -69,24 +69,19 @@ extern double tensor_float64_value(tensor_t *t);
 
 // Create a vector with given values, returns NULL on error
 extern tensor_t *tensor_int32_vec(tensor_pool_t *pool, int32_t *values, uint32_t nelems);
-extern tensor_t *tensor_uint32_vec(tensor_pool_t *pool, uint32_t* values, uint32_t nelems);
-extern tensor_t *tensor_int64_vec(tensor_pool_t *pool, int64_t* values, uint32_t nelems);
-extern tensor_t *tensor_uint64_vec(tensor_pool_t *pool, uint64_t* values, uint32_t nelems);
-extern tensor_t *tensor_float32_vec(tensor_pool_t *pool, float* values, uint32_t nelems);
-extern tensor_t *tensor_float64_vec(tensor_pool_t *pool, double* values, uint32_t nelems);
+extern tensor_t *tensor_uint32_vec(tensor_pool_t *pool, uint32_t *values, uint32_t nelems);
+extern tensor_t *tensor_int64_vec(tensor_pool_t *pool, int64_t *values, uint32_t nelems);
+extern tensor_t *tensor_uint64_vec(tensor_pool_t *pool, uint64_t *values, uint32_t nelems);
+extern tensor_t *tensor_float32_vec(tensor_pool_t *pool, float *values, uint32_t nelems);
+extern tensor_t *tensor_float64_vec(tensor_pool_t *pool, double *values, uint32_t nelems);
 
 ///////////////////////////////////////////////////////////////////////////////
 // OPERATIONS
 
-// Create an operation node to cast values, returns NULL on error
-extern tensor_t *tensor_cast_int32(tensor_pool_t *pool, tensor_t *a);
-extern tensor_t *tensor_cast_uint32(tensor_pool_t *pool, tensor_t *a);
-extern tensor_t *tensor_cast_int64(tensor_pool_t *pool, tensor_t *a);
-extern tensor_t *tensor_cast_uint64(tensor_pool_t *pool, tensor_t *a);
-extern tensor_t *tensor_cast_float32(tensor_pool_t *pool, tensor_t *a);
-extern tensor_t *tensor_cast_float64(tensor_pool_t *pool, tensor_t *a);
+// Create an operation node to cast to a specific type
+extern tensor_t *tensor_cast(tensor_pool_t *pool, tensor_dtype_t type, tensor_t *a);
 
-// Perform binary operations, returns NULL on error
+// Perform multiplication on two tensors, or one tensor and a scalar
 extern tensor_t *tensor_mul(tensor_pool_t *pool, tensor_t *a, tensor_t *b);
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -95,8 +90,8 @@ extern tensor_t *tensor_mul(tensor_pool_t *pool, tensor_t *a, tensor_t *b);
 // Construct the graph which allows a to be evaluated, returns NULL on error
 extern tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *a);
 
-// Perform the evaluation and return the output node, returns NULL on error 
-extern tensor_t* tensor_graph_evaluate(tensor_graph_t* graph);
+// Perform the evaluation and return the output node, returns NULL on error
+extern tensor_t *tensor_graph_evaluate(tensor_graph_t *graph);
 
 ///////////////////////////////////////////////////////////////////////////////
 // POOL
@@ -109,7 +104,7 @@ extern void tensor_pool_destroy(tensor_pool_t *pool);
 
 // Allocate N bytes from the pool, returns NULL on error
 // and set a unique id for the allocation if id is not NULL
-extern void *tensor_pool_alloc(tensor_pool_t *pool, size_t size, uint32_t* id);
+extern void *tensor_pool_alloc(tensor_pool_t *pool, size_t size, uint32_t *id);
 
 // Return size of memory pool
 extern size_t tensor_pool_size(tensor_pool_t *pool);

@@ -14,7 +14,7 @@ int main()
     assert(b);
 
     // We cast a value to a float32
-    tensor_t *c = tensor_cast_float32(pool, a);
+    tensor_t *c = tensor_cast(pool,FLOAT32_T, a);
     assert(c);
 
     // And then we multiply b by the scalar value c
