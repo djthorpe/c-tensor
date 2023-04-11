@@ -45,7 +45,8 @@ void tensor_pool_destroy(tensor_pool_t *pool)
         for (tensor_str_t *str = pool->str; str != NULL;)
         {
             tensor_str_t *next = str->next;
-            if(!str->constant && str->data) {
+            if (!str->constant && str->data)
+            {
                 free(str->data);
             }
             str = next;
@@ -129,4 +130,19 @@ inline size_t tensor_pool_used(tensor_pool_t *pool)
 {
     assert(pool != NULL);
     return pool->memused;
+}
+
+// Return number of used bytes for string data
+size_t tensor_pool_str_used(tensor_pool_t *pool)
+{
+    assert(pool != NULL);
+    size_t size = 0;
+    for (tensor_str_t *str = pool->str; str != NULL; str = str->next)
+    {
+        if (!str->constant && str->data != NULL)
+        {
+            size += str->size;
+        }
+    }
+    return size;
 }

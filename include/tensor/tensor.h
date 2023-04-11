@@ -108,4 +108,7 @@ extern size_t tensor_pool_size(tensor_pool_t *pool);
 // Return used bytes of memory pool
 extern size_t tensor_pool_used(tensor_pool_t *pool);
 
+// Return used bytes of string data in the pool (total memory used is pool_used + pool_str_used)
+extern size_t tensor_pool_str_used(tensor_pool_t *pool);
+
 #endif
