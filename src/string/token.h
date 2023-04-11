@@ -6,6 +6,9 @@
 // String data structure
 struct tensor_str_token_instance
 {
+    // Unique token id
+    uint32_t id;
+    
     // User data
     void *user_data;
 
