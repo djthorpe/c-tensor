@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <assert.h>
 
 #include <tensor/tensor.h>
@@ -21,6 +22,7 @@ tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep) {
     }
 
     // Initialize the CSV parser
+    csv->pool = pool;
     csv->sep = sep;
 
     // Allocate the delimiters we are going to use
@@ -44,6 +46,17 @@ tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep) {
 tensor_str_token_t *tensor_str_csv_parseline(tensor_str_csv_t *csv, tensor_str_t *str, void *user_data) {
     assert(csv != NULL);
     assert(str != NULL);
+
+    // Tokenize the string
+    tensor_str_token_t* token = tensor_str_tokenize(csv->pool,str,csv->delimiters,true,user_data);
+    if (token == NULL) {
+        return NULL;
+    }
+
+    while(token) {
+        // TODO
+        token = tensor_str_token_next(token);
+    }
 
     return NULL;
 }

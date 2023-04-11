@@ -5,6 +5,9 @@
 
 struct tensor_str_csv_instance
 {
+    // The memory pool
+    tensor_pool_t* pool;
+    
     // The field separator
     char sep;
 
