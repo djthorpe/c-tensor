@@ -4,8 +4,7 @@
 
 #include "tensor_private.h"
 
-
-const size_t buf_size = 80;
+#define buf_size 80
 static char buf[buf_size];
 
 ///////////////////////////////////////////////////////////////////////////////

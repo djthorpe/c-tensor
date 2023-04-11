@@ -1,5 +1,5 @@
 BUILD_DIR := build
-SRC_DIR := $(wildcard src/*)
+SRC_DIR := $(filter-out src/tensor_private.h, $(wildcard src/*))
 EXAMPLES_DIR := $(wildcard examples/*)
 TESTS_DIR := $(wildcard tests/*)
 

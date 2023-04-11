@@ -13,5 +13,6 @@
 #include "tensor/tensor.h"
 
 // Private declarations - string
+#include "string/csv.h"
 #include "string/string.h"
 #include "string/token.h"
