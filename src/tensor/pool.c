@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include <tensor/tensor.h>
-#include "private.h"
+#include "tensor_private.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -55,7 +55,7 @@ void tensor_pool_destroy(tensor_pool_t *pool)
 
 // Allocate bytes on the pool, returns NULL if memory exhausted
 // and set the id value if it's not NULL
-void* tensor_pool_alloc(tensor_pool_t* pool,size_t size, uint32_t* id)
+void *tensor_pool_alloc(tensor_pool_t *pool, size_t size, uint32_t *id)
 {
     assert(pool != NULL);
     assert(size > 0);
@@ -64,7 +64,7 @@ void* tensor_pool_alloc(tensor_pool_t* pool,size_t size, uint32_t* id)
     size = (size + TENSOR_POOL_ALIGN - 1) & ~(TENSOR_POOL_ALIGN - 1);
     if (pool->memused + size > pool->memsize)
     {
-        tensor_debug(pool, "tensor_pool_alloc: memory exhausted, size=%d, used=%d, total=%d\n", size, pool->memused, pool->memsize);
+        tensor_debug(pool, "tensor_pool_alloc: memory exhausted, size=%lu, used=%lu, total=%lu\n", size, pool->memused, pool->memsize);
         return NULL;
     }
     void *ptr = pool->mem + pool->memused;
@@ -81,38 +81,49 @@ void* tensor_pool_alloc(tensor_pool_t* pool,size_t size, uint32_t* id)
 
 // Allocate a new string in the pool and initialize the string to an empty
 // value. Return NULL if the allocation failed.
-tensor_str_t *tensor_pool_alloc_str(tensor_pool_t *pool, size_t size) {
+tensor_str_t *tensor_pool_alloc_str(tensor_pool_t *pool, size_t size)
+{
     assert(pool != NULL);
-    assert(size > 0);
 
     // Allocate string
     tensor_str_t *str = tensor_pool_alloc(pool, sizeof(tensor_str_t), NULL);
-    if (str == NULL) {
+    if (str == NULL)
+    {
         return NULL;
     }
 
     // Allocate string data - but not in the pool
-    str->data = malloc(size);
-    if (str->data == NULL) {
-        return NULL;
+    if (size)
+    {
+        str->data = malloc(size);
+        if (str->data == NULL)
+        {
+            return NULL;
+        }
+        str->data = memset(str->data, 0, size);
+    }
+    else
+    {
+        str->data = NULL;
     }
 
     // Initialize string
     str->size = size;
-    str->data = memset(str->data, 0, size);
     str->next = pool->str;
     pool->str = str;
     return str;
 }
 
 // Return size of memory pool
-inline size_t tensor_pool_size(tensor_pool_t *pool) {
+inline size_t tensor_pool_size(tensor_pool_t *pool)
+{
     assert(pool != NULL);
     return pool->memsize;
 }
 
 // Return used bytes of memory pool
-inline size_t tensor_pool_used(tensor_pool_t *pool) {
+inline size_t tensor_pool_used(tensor_pool_t *pool)
+{
     assert(pool != NULL);
     return pool->memused;
 }

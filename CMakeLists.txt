@@ -3,10 +3,11 @@ project(tensor VERSION 0.0.1)
 
 # Libraries
 add_subdirectory(src/tensor)
-add_subdirectory(src/csv)
+add_subdirectory(src/string)
 
 # Unit Tests
-add_subdirectory(test/tensor)
+add_subdirectory(tests/tensor)
+add_subdirectory(tests/string)
 
 # Examples
 add_subdirectory(examples/main)

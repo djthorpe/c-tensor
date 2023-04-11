@@ -6,8 +6,8 @@
 
 struct tensor_pool_instance
 {
-    uint32_t memsize;
-    uint32_t memused;
+    size_t memsize;
+    size_t memused;
     void *mem;
 
     // The string pool is a linked list of strings

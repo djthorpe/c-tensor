@@ -1,7 +1,7 @@
 BUILD_DIR := build
 SRC_DIR := $(wildcard src/*)
 EXAMPLES_DIR := $(wildcard examples/*)
-TESTS_DIR := $(wildcard test/*)
+TESTS_DIR := $(wildcard tests/*)
 
 # Paths to tools needed in dependencies
 CMAKE := $(shell which cmake)
@@ -18,6 +18,8 @@ src: $(SRC_DIR)
 examples: $(EXAMPLES_DIR)
 
 tests: $(TESTS_DIR)
+	@echo run tests
+	@${BUILD_DIR}/test/tensor/test_tensor 
 
 $(SRC_DIR): dependencies mkdir
 	@echo make src $(notdir $@)
@@ -31,8 +33,6 @@ $(EXAMPLES_DIR): dependencies mkdir
 $(TESTS_DIR): dependencies mkdir
 	@echo make tests $(notdir $@)
 	@make -C ${BUILD_DIR}/$@
-# Run the tests
-	@${BUILD_DIR}/test/tensor/test_tensor 
 
 mkdir:
 	@echo mkdir ${BUILD_DIR}

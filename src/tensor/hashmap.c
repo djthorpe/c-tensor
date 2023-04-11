@@ -1,7 +1,7 @@
 #include <assert.h>
 
 #include <tensor/tensor.h>
-#include "private.h"
+#include "tensor_private.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS

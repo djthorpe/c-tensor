@@ -34,9 +34,6 @@ typedef struct tensor_pool_instance tensor_pool_t;
 // Opaque graph
 typedef struct tensor_graph_instance tensor_graph_t;
 
-// Opaque string
-typedef struct tensor_str_instance tensor_str_t;
-
 ///////////////////////////////////////////////////////////////////////////////
 // TENSORS
 
@@ -110,23 +107,5 @@ extern size_t tensor_pool_size(tensor_pool_t *pool);
 
 // Return used bytes of memory pool
 extern size_t tensor_pool_used(tensor_pool_t *pool);
-
-///////////////////////////////////////////////////////////////////////////////
-// STRINGS
-
-// Return the string as a cstring
-extern const char *tensor_cstring(tensor_str_t *str);
-
-// Return a string from a printf-like format
-extern tensor_str_t *tensor_str_printf(tensor_pool_t *pool, const char *fmt, ...);
-
-// Describe the tensor (id, type, op, dimensions)
-extern tensor_str_t *tensor_str_describe(tensor_pool_t *pool, tensor_t *tensor);
-
-// Print the tensor
-extern tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor);
-
-// Return the length of a string
-extern size_t tensor_str_len(tensor_str_t *str);
 
 #endif

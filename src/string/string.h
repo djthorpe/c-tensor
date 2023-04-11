@@ -1,5 +1,7 @@
-#ifndef TENSOR_STRING_H
-#define TENSOR_STRING_H
+#ifndef TENSOR_PRIVATE_STRING_H
+#define TENSOR_PRIVATE_STRING_H
+
+#include "tensor_private.h"
 
 // String data structure
 struct tensor_str_instance
