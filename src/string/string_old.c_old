@@ -293,7 +293,7 @@ tensor_str_t *tensor_strcat_printf(tensor_str_t *str, const char *fmt, ...)
     vsnprintf(str->data + str->size, len + 1, fmt, args);
     va_end(args);
 
-    // Adjust the sizze
+    // Adjust the size
     str->size += len;
 
     // Return success

@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include <tensor/tensor.h>
 #include <tensor/string.h>
@@ -163,10 +164,14 @@ bool tensor_str_concat(tensor_str_t *dst, tensor_str_t *src)
 
     // If the destination string is not empty, then reallocate
     assert(dst->data != NULL);
-    dst->data = realloc(dst->data, dst->size + src->size);
-    if (dst->data == NULL)
+    void *data = realloc(dst->data, dst->size + src->size);
+    if (data == NULL)
     {
         return false;
+    }
+    else
+    {
+        dst->data = data;
     }
     memcpy(dst->data + dst->size - 1, src->data, src->size);
     dst->size += src->size - 1;
@@ -176,7 +181,45 @@ bool tensor_str_concat(tensor_str_t *dst, tensor_str_t *src)
 // Concatenate a printf statement to a string, return true on success
 bool tensor_str_printf(tensor_str_t *dst, const char *fmt, ...)
 {
-    // TODO
-    assert(false);
-    return false;
+    assert(dst != NULL);
+    assert(fmt != NULL);
+
+    // Get the additional length required for the string
+    va_list args;
+    va_start(args, fmt);
+    size_t len = vsnprintf(NULL, 0, fmt, args);
+    va_end(args);
+
+    // An error occurred
+    if ((int)len < 0)
+    {
+        return false;
+    }
+
+    // No length - return true
+    if (len == 0)
+    {
+        return true;
+    }
+
+    // Reallocate
+    size_t newsize = dst->size == 0 ? len + 1 : dst->size + len;
+    void *data = realloc(dst->data, newsize);
+    if (data == NULL)
+    {
+        return false;
+    }
+    else
+    {
+        dst->data = data;
+        dst->size = newsize;
+    }
+
+    // Concatenate the string
+    va_start(args, fmt);
+    vsnprintf(dst->size == 0 ? dst->data : dst->data + dst->size - 1, len, fmt, args);
+    va_end(args);
+
+    // Return success
+    return true;
 }
