@@ -58,6 +58,6 @@ tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor);
 // Create a list of tokens from a string, separated by the given set of delimiters and
 // optionally including the delimiters in the list of tokens. Returns NULL on
 // memory allocation error or zero-valued string
-tensor_str_token_t *tensor_str_tokenize(tensor_pool_t *pool, tensor_str_t *str, void *user_data, char *delimiters, bool keep_delimiters);
+tensor_str_token_t *tensor_str_tokenize(tensor_pool_t *pool, tensor_str_t *str, char *delimiters, bool keep_delimiters, void *user_data);
 
 #endif

@@ -212,13 +212,15 @@ bool tensor_str_printf(tensor_str_t *dst, const char *fmt, ...)
     else
     {
         dst->data = data;
-        dst->size = newsize;
     }
 
     // Concatenate the string
     va_start(args, fmt);
-    vsnprintf(dst->size == 0 ? dst->data : dst->data + dst->size - 1, len, fmt, args);
+    vsnprintf(dst->size == 0 ? dst->data : dst->data + dst->size - 1, len+1, fmt, args);
     va_end(args);
+
+    // Update the size
+    dst->size = newsize;
 
     // Return success
     return true;

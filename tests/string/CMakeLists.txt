@@ -1,6 +1,7 @@
 add_executable(test_string
     main.c
     string.c
+    token.c
 )
 
 target_include_directories(test_string PRIVATE
