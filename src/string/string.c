@@ -12,6 +12,47 @@
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC METHODS
 
+// Reference some part of another string as a constant string, from a left-most
+// character index and a length. Returns NULL if there was an error, for example
+// if the index was out of bounds
+tensor_str_t *tensor_str_ref(tensor_pool_t *pool, tensor_str_t *src, size_t left, size_t len)
+{
+    assert(pool != NULL);
+    assert(src != NULL);
+
+    // Check left when left or len are greater than zero
+    if (src->size == 0 && (left > 0 || len > 0)) {
+        return NULL;
+    }
+
+    // Allocate an empty string (one that has no data)
+    tensor_str_t *dest = tensor_pool_alloc_str(pool, 0);
+    if (dest == NULL)
+    {
+        return NULL;
+    }
+
+    // Set string as a constant string
+    dest->constant = true;
+
+    // Return the string if the length is zero
+    if (len == 0)
+    {
+        return dest;
+    }
+
+    // TODO: Check length
+
+    // Set the string data
+    dest->data = src->data + left;
+    dest->size = len;
+
+    // TODO: What do we do about null termination and the use of cstring methods?
+
+    // Return the string
+    return dest;
+}
+
 // Create a string from a cstring. If str is NULL then create an empty
 // string
 tensor_str_t *tensor_str_create(tensor_pool_t *pool, char *cstring)
@@ -148,6 +189,12 @@ bool tensor_str_concat(tensor_str_t *dst, tensor_str_t *src)
         return true;
     }
 
+    // If destination string is constant, return false
+    if (dst->constant)
+    {
+        return false;
+    }
+
     // If the destination string is empty, then copy
     if (dst->size == 0)
     {
@@ -202,6 +249,12 @@ bool tensor_str_printf(tensor_str_t *dst, const char *fmt, ...)
         return true;
     }
 
+    // If destination string is constant, return false
+    if (dst->constant)
+    {
+        return false;
+    }
+
     // Reallocate
     size_t newsize = dst->size == 0 ? len + 1 : dst->size + len;
     void *data = realloc(dst->data, newsize);
@@ -216,7 +269,7 @@ bool tensor_str_printf(tensor_str_t *dst, const char *fmt, ...)
 
     // Concatenate the string
     va_start(args, fmt);
-    vsnprintf(dst->size == 0 ? dst->data : dst->data + dst->size - 1, len+1, fmt, args);
+    vsnprintf(dst->size == 0 ? dst->data : dst->data + dst->size - 1, len + 1, fmt, args);
     va_end(args);
 
     // Update the size

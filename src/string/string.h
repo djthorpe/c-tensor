@@ -12,6 +12,9 @@ struct tensor_str_instance
     // Size of string, including null terminator
     size_t size;
 
+    // Constant strings cannot be manipulated or free'd (they are tokens)
+    bool constant;
+
     // Next string in the pool
     tensor_str_t *next;
 };

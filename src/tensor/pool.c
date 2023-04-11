@@ -45,7 +45,9 @@ void tensor_pool_destroy(tensor_pool_t *pool)
         for (tensor_str_t *str = pool->str; str != NULL;)
         {
             tensor_str_t *next = str->next;
-            free(str->data);
+            if(!str->constant && str->data) {
+                free(str->data);
+            }
             str = next;
         }
         free(pool->mem);
@@ -109,6 +111,7 @@ tensor_str_t *tensor_pool_alloc_str(tensor_pool_t *pool, size_t size)
 
     // Initialize string
     str->size = size;
+    str->constant = false;
     str->next = pool->str;
     pool->str = str;
     return str;
