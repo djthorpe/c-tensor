@@ -3,6 +3,9 @@
 #include <tensor/tensor.h>
 #include "tensor_private.h"
 
+const size_t buf_size = 80;
+static char buf[buf_size];
+
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 
@@ -27,7 +30,9 @@ static struct tensor_graph_node *tensor_graph_push(tensor_graph_t *graph, tensor
         assert(graph->right == NULL);
         graph->left = node;
         graph->right = node;
-    } else {
+    }
+    else
+    {
         assert(graph->right != NULL);
         node->prev = graph->right;
         graph->right->next = node;
@@ -83,7 +88,7 @@ static struct tensor_graph_node *tensor_graph_node_evaluate(tensor_graph_t *grap
     assert(graph != NULL);
     assert(node != NULL);
     assert(node->tensor != NULL);
-    tensor_debug(graph->pool, "Evaluating node %s\n", tensor_cstring(tensor_str_describe(graph->pool, node->tensor)));
+    tensor_debug(graph->pool, "Evaluating node %s\n", tensor_cstring(buf, buf_size, tensor_str_describe(graph->pool, node->tensor)));
     // TODO: Handle the error condition
     tensor_evaluate(graph->pool, node->tensor);
     return node->next;

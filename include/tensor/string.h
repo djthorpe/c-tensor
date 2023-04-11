@@ -8,8 +8,9 @@
 // Token types
 typedef enum
 {
-    TEXT_T,
-    DELIMITER_T,
+    START_T,     // Start of string
+    TEXT_T,      // Text token
+    DELIMITER_T, // Deimiter token
 } tensor_token_type_t;
 
 // Opaque string
@@ -43,8 +44,8 @@ size_t tensor_str_len(tensor_str_t *str);
 // Empty a string (set length to zero)
 void tensor_str_zero(tensor_str_t *str);
 
-// Return the string as a cstring
-const char *tensor_cstring(tensor_str_t *str);
+// Return the string as a cstring, up to size bytes, including null terminator
+const char *tensor_cstring(char *dst, size_t size, tensor_str_t *src);
 
 // Describe the tensor (id, type, op, dimensions, etc.)
 tensor_str_t *tensor_str_describe(tensor_pool_t *pool, tensor_t *tensor);
@@ -59,5 +60,20 @@ tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor);
 // optionally including the delimiters in the list of tokens. Returns NULL on
 // memory allocation error or zero-valued string
 tensor_str_token_t *tensor_str_tokenize(tensor_pool_t *pool, tensor_str_t *str, char *delimiters, bool keep_delimiters, void *user_data);
+
+// Return the next token in the list, or NULL if there are no next tokens defined
+tensor_str_token_t *tensor_str_token_next(tensor_str_token_t *token);
+
+// Return a token's type
+tensor_token_type_t tensor_str_token_type(tensor_str_token_t *token);
+
+// Return a token's user data
+void *tensor_str_token_user_data(tensor_str_token_t *token);
+
+// Return a token's string
+tensor_str_t *tensor_str_token_str(tensor_str_token_t *token);
+
+// Describe a single token
+tensor_str_t *tensor_str_token_describe(tensor_pool_t *pool, tensor_str_token_t *token);
 
 #endif

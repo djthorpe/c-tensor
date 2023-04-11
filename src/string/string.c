@@ -21,7 +21,8 @@ tensor_str_t *tensor_str_ref(tensor_pool_t *pool, tensor_str_t *src, size_t left
     assert(src != NULL);
 
     // Check left when left or len are greater than zero
-    if (src->size == 0 && (left > 0 || len > 0)) {
+    if (src->size == 0 && (left > 0 || len > 0))
+    {
         return NULL;
     }
 
@@ -65,19 +66,25 @@ tensor_str_t *tensor_str_create(tensor_pool_t *pool, char *cstring)
         len = (size_t)strlen(cstring);
     }
 
-    // Allocate the string, with an extra terminating null byte
-    tensor_str_t *str = tensor_pool_alloc_str(pool, cstring == NULL ? 0 : len + 1);
+    // Allocate the string
+    tensor_str_t *str = tensor_pool_alloc_str(pool, cstring == NULL ? 0 : len);
     if (str == NULL)
     {
         return NULL;
     }
 
+    // If empty string, return
+    if (len == 0)
+    {
+        return str;
+    }
+
     // Copy the string
     if (cstring != NULL)
     {
-        assert(str->size == len + 1);
+        assert(str->size == len);
         assert(str->data != NULL);
-        memcpy(str->data, cstring, len + 1);
+        memcpy(str->data, cstring, len);
     }
 
     // Return the string
@@ -122,7 +129,7 @@ inline size_t tensor_str_len(tensor_str_t *str)
     else
     {
         assert(str->data != NULL);
-        return str->size - 1;
+        return str->size;
     }
 }
 
@@ -135,20 +142,35 @@ inline void tensor_str_zero(tensor_str_t *str)
     str->data = NULL;
 }
 
-// Return the string as a cstring. Note that cstrings cannot
-// contain null bytes.
-inline const char *tensor_cstring(tensor_str_t *str)
+// Return the string as a cstring, up to size bytes, including null terminator
+const char *tensor_cstring(char *dst, size_t size, tensor_str_t *src)
 {
-    assert(str != NULL);
-    if (str->size == 0)
+    assert(dst != NULL);
+    assert(src != NULL);
+    assert(size > 0);
+
+    // Check on empty string case
+    if (src->size == 0 || size == 1)
     {
-        return "";
+        *dst = '\0';
+        return dst;
     }
-    else
+
+    // Adjust size to be minimum of size
+    if (size > src->size)
     {
-        assert(str->data != NULL);
-        return str->data;
+        size = src->size;
+    } else {
+        size--;
     }
+
+    // Copy the data, add NULL terminator
+    assert(src->data != NULL);
+    memcpy(dst, src->data, size);
+    dst[size] = '\0';
+
+    // Return the string
+    return dst;
 }
 
 // Return true if two strings are equal
@@ -220,8 +242,8 @@ bool tensor_str_concat(tensor_str_t *dst, tensor_str_t *src)
     {
         dst->data = data;
     }
-    memcpy(dst->data + dst->size - 1, src->data, src->size);
-    dst->size += src->size - 1;
+    memcpy(dst->data + dst->size, src->data, src->size);
+    dst->size += src->size;
     return true;
 }
 
@@ -231,7 +253,8 @@ bool tensor_str_printf(tensor_str_t *dst, const char *fmt, ...)
     assert(dst != NULL);
     assert(fmt != NULL);
 
-    // Get the additional length required for the string
+    // Get the additional length required for the string, not including
+    // the terminating null byte
     va_list args;
     va_start(args, fmt);
     size_t len = vsnprintf(NULL, 0, fmt, args);
@@ -255,9 +278,9 @@ bool tensor_str_printf(tensor_str_t *dst, const char *fmt, ...)
         return false;
     }
 
-    // Reallocate
-    size_t newsize = dst->size == 0 ? len + 1 : dst->size + len;
-    void *data = realloc(dst->data, newsize);
+    // Reallocate - add an extra byte for the null terminator that vsnprintf will add
+    size_t newsize = dst->size + len;
+    void *data = realloc(dst->data, newsize + 1);
     if (data == NULL)
     {
         return false;
@@ -267,9 +290,9 @@ bool tensor_str_printf(tensor_str_t *dst, const char *fmt, ...)
         dst->data = data;
     }
 
-    // Concatenate the string
+    // Append the string to the end of the buffer
     va_start(args, fmt);
-    vsnprintf(dst->size == 0 ? dst->data : dst->data + dst->size - 1, len + 1, fmt, args);
+    vsnprintf(dst->data + dst->size, len + 1, fmt, args);
     va_end(args);
 
     // Update the size

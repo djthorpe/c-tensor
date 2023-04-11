@@ -4,6 +4,10 @@
 
 #include "tensor_private.h"
 
+
+const size_t buf_size = 80;
+static char buf[buf_size];
+
 ///////////////////////////////////////////////////////////////////////////////
 // PUBLIC METHODS
 
@@ -288,11 +292,11 @@ bool tensor_evaluate(tensor_pool_t *pool, tensor_t *t)
     }
     if (success)
     {
-        tensor_debug(pool, "  tensor_evaluate: %s\n", tensor_cstring(tensor_str_print(pool, t)));
+        tensor_debug(pool, "  tensor_evaluate: %s\n", tensor_cstring(buf,buf_size,tensor_str_print(pool, t)));
     }
     else
     {
-        tensor_debug(pool, "  tensor_evaluate: failed for %s\n", tensor_cstring(tensor_str_describe(pool, t)));
+        tensor_debug(pool, "  tensor_evaluate: failed for %s\n", tensor_cstring(buf,buf_size,tensor_str_describe(pool, t)));
     }
     return success;
 }

@@ -19,16 +19,9 @@ struct tensor_str_instance
     tensor_str_t *next;
 };
 
-// Concatenate a string representation of a value to a string. Returns the string
-// again or NULL if the allocation failed.
-tensor_str_t* tensor_strcat_dtype(tensor_str_t *str, tensor_dtype_t dtype, void* value);
-
-// Concatenate a cstring value to a string. Returns the string
-// again or NULL if the allocation failed.
-tensor_str_t* tensor_strcat_cstr(tensor_str_t *str, const char* value);
-
-// Concatenate a printf value to a string. Returns the string
-// again or NULL if the allocation failed.
-tensor_str_t* tensor_strcat_printf(tensor_str_t *str, const char* fmt, ...);
+// Reference some part of another string as a constant string, from a left-most
+// character index and a length. Returns NULL if there was an error, for example
+// if the index was out of bounds
+tensor_str_t *tensor_str_ref(tensor_pool_t *pool, tensor_str_t *src, size_t left, size_t len);
 
 #endif
