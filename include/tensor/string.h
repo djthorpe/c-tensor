@@ -19,6 +19,10 @@ typedef struct tensor_str_instance tensor_str_t;
 // Opaque tokens
 typedef struct tensor_str_token_instance tensor_str_token_t;
 
+// Opaque csv
+typedef struct tensor_str_csv_instance tensor_str_csv_t;
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // STRINGS
 
@@ -75,5 +79,15 @@ tensor_str_t *tensor_str_token_str(tensor_str_token_t *token);
 
 // Describe a single token
 tensor_str_t *tensor_str_token_describe(tensor_pool_t *pool, tensor_str_token_t *token);
+
+///////////////////////////////////////////////////////////////////////////////
+// CSV
+
+// Create a CSV parser, with the given separator (usually ',', ';' or '\t')
+tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep);
+
+// Consume a string of CSV data and return the fields as a list of tokens.
+// Returns NULL on error.
+tensor_str_token_t *tensor_str_csv_parseline(tensor_str_csv_t *csv, tensor_str_t *str, void *user_data);
 
 #endif

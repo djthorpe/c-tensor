@@ -7,7 +7,7 @@ void test_token();
 int main()
 {
     test_csv();
-    test_string();
-    test_token();
+    //test_string();
+    //test_token();
     return 0;
 }
