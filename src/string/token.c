@@ -132,7 +132,7 @@ tensor_str_token_t *tensor_str_tokenize(tensor_pool_t *pool, tensor_str_t *str, 
         if (strchr(delimiters, c) || c == '\0')
         {
             // Eject token before delimiter
-            if (ptr)
+            if (ptr && start != ptr)
             {
                 tokens = tensor_str_token_append_ref(pool, tokens, TEXT_T, str, start, ptr - start, user_data);
                 if (tokens == NULL)
@@ -152,7 +152,7 @@ tensor_str_token_t *tensor_str_tokenize(tensor_pool_t *pool, tensor_str_t *str, 
             }
 
             // Adjust start to point to the next character after the delimiter
-            start = ptr;
+            start = ptr + 1;
         }
     }
 
