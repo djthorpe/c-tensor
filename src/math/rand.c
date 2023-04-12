@@ -37,6 +37,9 @@ tensor_math_rand_generator_t *tensor_math_rand_generator_create(tensor_pool_t *p
         generator->seed = seed;
     }
 
+    // Initialize the cached value
+    generator->cached = NAN;
+
     // Return success
     return generator;
 }
@@ -66,40 +69,36 @@ inline double tensor_math_rand_float64(tensor_math_rand_generator_t *generator)
     return (double)tensor_math_rand_uint64(generator) / (double)UINT64_MAX;
 }
 
-/*
-//===========================================================================
-//=  Function to generate normally distributed random variable using the    =
-//=  Box-Muller method                                                      =
-//=    - Input: mean and standard deviation                                 =
-//=    - Output: Returns with normally distributed random variable          =
-//===========================================================================
-double tensor_math_randn_float64(tensor_math_rand_generator_t *generator)
+// Generate a normalized random number using the box-muller method
+double tensor_math_randn_float64(tensor_math_rand_generator_t *generator, double mean, double std)
 {
     assert(generator);
 
-    // Generate a random number > 0.0 and <= 1.0
-    double u = 0.0;
-    while (u == 0.0)
+    double value;
+    if (isnan(generator->cached))
     {
-        u = tensor_math_rand_float64(generator);
+        value = generator->cached;
+        generator->cached = NAN;
+    }
+    else
+    {
+        double x;
+        double y;
+        double r;
+        do
+        {
+            x = 2.0 * tensor_math_rand_float64(generator);
+            y = 2.0 * tensor_math_rand_float64(generator);
+            r = x * x + y * y;
+        } while (r == 0.0 || r > 1.0);
+
+        double d = sqrt(-2.0 * log(r) / r);
+        double n1 = x * d;
+        double n2 = y * d;
+
+        value = n1;
+        generator->cached = n2;
     }
 
-    // Compute r
-    double r = sqrt(-2.0 * log(u));
-
-    // Generate theta
-    double theta = 0.0;
-    while (theta == 0.0) {
-        theta = 2.0 * M_PI * rand_val(0);
-    }
-
-    // Generate x value
-    double x = r * cos(theta);
-
-    // Adjust x value for specified mean and variance
-    double norm_rv = (x * std_dev) + mean;
-
-    // Return the normally distributed RV value
-    return (norm_rv);
+    return value  * std + mean;
 }
-*/

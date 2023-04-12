@@ -8,7 +8,11 @@
 // Random number generator
 struct tensor_math_rand_generator_instance
 {
+    // Current random number seed
     uint64_t seed;
+
+    // Cached Box-Muller value
+    double cached;
 };
 
 #endif

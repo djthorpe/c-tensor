@@ -58,4 +58,14 @@ uint64_t tensor_math_rand_uint64(tensor_math_rand_generator_t *generator);
  */
 int64_t tensor_math_rand_int63(tensor_math_rand_generator_t *generator);
 
+/**
+ * Generate a random number that fits within a standard deviation of the mean
+ * 
+ * @param generator    Random number generator
+ * @param mean         Mean value
+ * @param std          Standard deviation
+ * @return             Random number that fits within the distribution
+ */
+double tensor_math_randn_float64(tensor_math_rand_generator_t *generator, double mean, double std);
+
 #endif
