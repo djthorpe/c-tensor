@@ -3,7 +3,7 @@ add_executable(test_math
     rand.c
 )
 
-target_include_directories(test_string PRIVATE
+target_include_directories(test_math PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../../include
     ${CMAKE_CURRENT_LIST_DIR}/..
 )

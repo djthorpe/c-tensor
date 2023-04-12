@@ -2,13 +2,19 @@
 #ifndef TENSOR_STRING_H
 #define TENSOR_STRING_H
 
-#include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "tensor.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// Token types
+/**
+ * Token types
+ *
+ * The token types are used to describe the type of token that is returned by
+ * the tokenizer.
+ *
+ */
 typedef enum
 {
     START_T,     // Start of string
@@ -66,7 +72,7 @@ tensor_str_t *tensor_str_dup(tensor_pool_t *pool, tensor_str_t *str);
  *
  * @param a           The first string argument.
  * @param b           The second string argument.
- * @return            Returns true if the two strings are exactly equal, 
+ * @return            Returns true if the two strings are exactly equal,
  *                    or are both empty.
  */
 bool tensor_str_equals(tensor_str_t *a, tensor_str_t *b);
@@ -74,14 +80,14 @@ bool tensor_str_equals(tensor_str_t *a, tensor_str_t *b);
 /**
  * Append a printf-formatted string with arguments to a string
  *
- * 
+ *
  *
  * @param dst         The first string argument.
  * @param fmt         The format of the string to append, with the
  *                    same semantics as printf. Use further argumentd
  *                    to specify the values to insert into the formatted
  *                    string.
- * @return            Returns true on success, or false if there was an 
+ * @return            Returns true on success, or false if there was an
  *                    error, maybe due to a memory allocation error.
  */
 bool tensor_str_printf(tensor_str_t *dst, const char *fmt, ...);
@@ -91,7 +97,7 @@ bool tensor_str_printf(tensor_str_t *dst, const char *fmt, ...);
  *
  * @param dst         The destination string, which will be appended to
  * @param src         The source string
- * @return            Returns true on success, or false if there was an 
+ * @return            Returns true on success, or false if there was an
  *                    error, maybe due to a memory allocation error.
  */
 bool tensor_str_concat(tensor_str_t *dst, tensor_str_t *src);

@@ -8,7 +8,7 @@
 // Random number generator
 struct tensor_math_rand_generator_instance
 {
-    int64_t seed;
+    uint64_t seed;
 };
 
 #endif
