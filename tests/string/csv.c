@@ -4,7 +4,6 @@
 #include <tensor/string.h>
 #include "test.h"
 
-
 #define buf_size 80
 static char buf[buf_size];
 
@@ -49,7 +48,82 @@ void test_csv_100()
     tensor_pool_destroy(pool);
 }
 
+void test_csv_101()
+{
+    printf("Running test_csv_101\n");
+    tensor_pool_t *pool = tensor_pool_create(64 * 1024);
+    ASSERT_NOTNULL(pool);
+
+    // Test the simple case
+    tensor_str_csv_t *csv = tensor_str_csv_create(pool, 0);
+    ASSERT_NOTNULL(csv);
+    tensor_str_t *str = tensor_str_create(pool, (char *)test_101);
+    ASSERT_NOTNULL(str);
+    tensor_str_token_t *token = tensor_str_csv_parse(csv, str, NULL);
+    ASSERT_NOTNULL(token);
+
+    printf("  csv=%s\n", test_101);
+    while (token)
+    {
+        printf("  token=%s\n", tensor_cstring(buf, buf_size, tensor_str_token_describe(pool, token)));
+        token = tensor_str_token_next(token);
+    }
+
+    tensor_pool_destroy(pool);
+}
+
+void test_csv_102()
+{
+    printf("Running test_csv_102\n");
+    tensor_pool_t *pool = tensor_pool_create(64 *1024);
+    ASSERT_NOTNULL(pool);
+
+    // Test the simple case
+    tensor_str_csv_t *csv = tensor_str_csv_create(pool, 0);
+    ASSERT_NOTNULL(csv);
+    tensor_str_t *str = tensor_str_create(pool, (char *)test_102);
+    ASSERT_NOTNULL(str);
+    tensor_str_token_t *token = tensor_str_csv_parse(csv, str, NULL);
+    ASSERT_NOTNULL(token);
+
+    printf("  csv=%s\n", test_102);
+    while (token)
+    {
+        printf("  token=%s\n", tensor_cstring(buf, buf_size, tensor_str_token_describe(pool, token)));
+        token = tensor_str_token_next(token);
+    }
+
+    tensor_pool_destroy(pool);
+}
+
+void test_csv_103()
+{
+    printf("Running test_csv_103\n");
+    tensor_pool_t *pool = tensor_pool_create(64 *1024);
+    ASSERT_NOTNULL(pool);
+
+    // Test the simple case
+    tensor_str_csv_t *csv = tensor_str_csv_create(pool, 0);
+    ASSERT_NOTNULL(csv);
+    tensor_str_t *str = tensor_str_create(pool, (char *)test_103);
+    ASSERT_NOTNULL(str);
+    tensor_str_token_t *token = tensor_str_csv_parse(csv, str, NULL);
+    ASSERT_NOTNULL(token);
+
+    printf("  csv=%s\n", test_103);
+    while (token)
+    {
+        printf("  token=%s\n", tensor_cstring(buf, buf_size, tensor_str_token_describe(pool, token)));
+        token = tensor_str_token_next(token);
+    }
+
+    tensor_pool_destroy(pool);
+}
+
 void test_csv()
 {
     test_csv_100();
+    test_csv_101();
+    test_csv_102();
+    test_csv_103();
 }

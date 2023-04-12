@@ -46,7 +46,7 @@ tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep)
 
 // Consume a string of CSV data and return the fields as a list of tokens.
 // Returns NULL on error.
-tensor_str_token_t *tensor_str_csv_parseline(tensor_str_csv_t *csv, tensor_str_t *str, void *user_data)
+tensor_str_token_t *tensor_str_csv_parse(tensor_str_csv_t *csv, tensor_str_t *str, void *user_data)
 {
     assert(csv != NULL);
     assert(str != NULL);
@@ -61,9 +61,25 @@ tensor_str_token_t *tensor_str_csv_parseline(tensor_str_csv_t *csv, tensor_str_t
     tensor_str_token_t *token = head;
     while (token)
     {
-        // TODO
+        // Return non-delimiter tokens as text
+        if (token->token_type == DELIMITER_T)
+        {
+            if(tensor_str_token_is_delimiter(token, '\n')) {
+                // TODO: if the last token was also EOL_T then ignore this one
+                token->token_type = EOL_T;
+                token->str = NULL;
+
+            } else if (!tensor_str_token_is_delimiter(token, csv->sep))
+            {
+                token->token_type = TEXT_T;
+            }
+        }
+
+        // Move to next token
         token = tensor_str_token_next(token);
     }
+
+    // TODO: If the last token is not EOL_T then append one
 
     return head;
 }

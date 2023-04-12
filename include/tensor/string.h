@@ -128,6 +128,17 @@ tensor_str_t *tensor_str_token_str(tensor_str_token_t *token);
  */
 tensor_str_t *tensor_str_token_describe(tensor_pool_t *pool, tensor_str_token_t *token);
 
+
+/**
+ * Return true if token is a delimiter
+ *
+ *
+ * @param token      The token to describe
+ * @param delimiter  The delimiter to check
+ * @return           Returns true if a token is a delimiter
+ */
+bool tensor_str_token_is_delimiter(tensor_str_token_t *token, const char delimiter);
+
 ///////////////////////////////////////////////////////////////////////////////
 // CSV
 

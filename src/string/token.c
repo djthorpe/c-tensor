@@ -20,6 +20,8 @@ static const char *tensor_str_token_type_cstring(tensor_token_type_t type)
         return "TEXT_T";
     case DELIMITER_T:
         return "DELIMITER_T";
+    case EOL_T:
+        return "EOL_T";
     default:
         return NULL;
     }
@@ -222,4 +224,9 @@ tensor_str_t *tensor_str_token_describe(tensor_pool_t *pool, tensor_str_token_t 
 
     // Return the string
     return str;
+}
+
+inline bool tensor_str_token_is_delimiter(tensor_str_token_t *token, const char delimiter) {
+    assert(token != NULL);
+    return token->token_type == DELIMITER_T && token->str->size == 1 && token->str->data[0] == delimiter;
 }
