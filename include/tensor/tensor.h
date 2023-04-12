@@ -2,7 +2,7 @@
 #ifndef TENSOR_H
 #define TENSOR_H
 
-#include <stdlib.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -36,15 +36,58 @@ typedef struct tensor_graph_instance tensor_graph_t;
 ///////////////////////////////////////////////////////////////////////////////
 // TENSORS
 
-// Unique identifier for a tensor
-extern uint32_t tensor_id(tensor_t *t);
+/**
+ * Return a unique identifier for the tensor
+ *
+ * @param t           The tensor
+ * @return            Returns the identifier for the tensor, which will be unique
+ *                    across all other tensors in the same memory pool.
+ */
+uint32_t tensor_id(tensor_t *t);
 
-// Return dimension propoerties
-extern bool tensor_is_scalar(tensor_t *t);
-extern bool tensor_is_vector(tensor_t *t);
+/**
+ * Return true if a tensor is a scalar value
+ *
+ * @param t           The tensor
+ * @return            Returns true if the tensor is a scalar value (with no dimensions)
+ */
+bool tensor_is_scalar(tensor_t *t);
 
-// Create a tensor, returns NULL on error
-extern tensor_t *tensor_create(tensor_pool_t *pool, tensor_dtype_t type, uint32_t *dims);
+/**
+ * Return true if a tensor is a vector value
+ *
+ * @param t           The tensor
+ * @return            Returns true if the tensor is a vector value (with one dimension)
+ */
+bool tensor_is_vector(tensor_t *t);
+
+/**
+ * Create a tensor with zero values
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param type        The data type of the tensor elements
+ * @param dims        The shape of the tensor. Set to NULL to return a scalar
+ *                    value.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool.
+ */
+tensor_t *tensor_create(tensor_pool_t *pool, tensor_dtype_t type, uint32_t *dims);
+
+/**
+ * Create a tensor with random values which fit a normal distribution
+ *
+ * Returns a tensor filled with random numbers from a normal distribution
+ * with mean 0 and variance 1.
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param type        The data type of the tensor elements, either FLOAT32_T or
+ *                    FLOAT64_T
+ * @param dims        The shape of the tensor. Set to NULL to return a scalar
+ *                    value.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool, or the data type is not supported.
+ */
+tensor_t *tensor_create_randn(tensor_pool_t *pool, tensor_dtype_t type, uint32_t *dims);
 
 // Create a scalar with given value, returns NULL on error
 extern tensor_t *tensor_int32(tensor_pool_t *pool, int32_t value);
@@ -75,7 +118,7 @@ extern tensor_t *tensor_float64_vec(tensor_pool_t *pool, double *values, uint32_
 
 /**
  * Cast a tensor to a different data type
- * 
+ *
  * @param pool        The memory pool to use for creating the tensor operation
  * @param type        The data type to cast to
  * @param a           The tensor argument
@@ -89,11 +132,11 @@ extern tensor_t *tensor_cast(tensor_pool_t *pool, tensor_dtype_t type, tensor_t 
 
 /**
  * Create a multiplication tensor operation on two tensors
- * 
+ *
  * Multiplication can occur on two tensors of the same shape, or if
  * one tensor is a scalar. In the latter case, the scalar is broadcast
  * to the shape of the other tensor.
- * 
+ *
  * @param pool        The memory pool to use for creating the tensor operation
  * @param a           The first tensor argument
  * @param b           The second tensor argument
@@ -109,7 +152,7 @@ extern tensor_t *tensor_mul(tensor_pool_t *pool, tensor_t *a, tensor_t *b);
 
 /**
  * Construct a graph which allows a tensor calculation to be evaluated
- * 
+ *
  * @param pool        The memory pool to use for creating the graph
  * @param a           The tensor to evaluate
  * @return            The tensor graph, or NULL on error.
@@ -121,7 +164,7 @@ extern tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *a);
 
 /**
  * Perform the evaluation and return the output node
- * 
+ *
  * @param graph       The graph to evaluate
  * @return            The tensor which is the output node of the graph, or NULL
  *                    if the graph could not be evaluated, usually due to a
@@ -134,7 +177,7 @@ extern tensor_t *tensor_graph_evaluate(tensor_graph_t *graph);
 
 /**
  * Create a new memory pool
- * 
+ *
  * The memory pool is used to a fixed allocation of memory for tensors and graphs.
  * Ensure you allocate enough memory for the pool. The pool is also used to allocate
  * memory for strings and tokens, but as strings can be of arbitrary length, the
@@ -148,8 +191,8 @@ extern tensor_pool_t *tensor_pool_create(uint32_t memsize);
 
 /**
  * Destroy a memory pool, freeing all resources
- * 
- * The memory resources (including string data) is freed, and the memory is 
+ *
+ * The memory resources (including string data) is freed, and the memory is
  * returned to the system.
  *
  * @param pool        The memory pool
@@ -159,10 +202,10 @@ extern void tensor_pool_destroy(tensor_pool_t *pool);
 /**
  * Allocate memory from the memory pool and set a unique id for the memory
  * allocation.
- * 
+ *
  * @param pool        The memory pool
  * @param size        The size of the memory allocation in bytes
- * @param id          A pointer reference to a unique identifier to be set 
+ * @param id          A pointer reference to a unique identifier to be set
  *                    for the memory allocation. Pass NULL if this is not
  *                    required.
  * @return            A pointer to the memory allocation, or NULL if the
@@ -174,7 +217,7 @@ extern void *tensor_pool_alloc(tensor_pool_t *pool, size_t size, uint32_t *id);
 
 /**
  * Return the total size of the memory pool in bytes
- * 
+ *
  * @param pool        The memory pool
  * @return            The size of the memory pool in bytes, not including
  *                    string data.
@@ -183,7 +226,7 @@ extern size_t tensor_pool_size(tensor_pool_t *pool);
 
 /**
  * Return the used size of the memory pool in bytes
- * 
+ *
  * @param pool        The memory pool
  * @return            The size of the used memory pool in bytes, not including
  *                    string data.
@@ -192,7 +235,7 @@ extern size_t tensor_pool_used(tensor_pool_t *pool);
 
 /**
  * Return the used size for string data in bytes
- * 
+ *
  * @param pool        The memory pool
  * @return            The size of the string data in bytes, not including
  *                    the memory pool size.
