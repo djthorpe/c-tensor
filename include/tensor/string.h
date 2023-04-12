@@ -30,29 +30,96 @@ typedef struct tensor_str_csv_instance tensor_str_csv_t;
 ///////////////////////////////////////////////////////////////////////////////
 // STRINGS
 
-// Create a string from a cstring. If str is NULL then create an empty
-// string
+/**
+ * Create a string from a cstring
+ *
+ * Creates a string from a Null-terminated C string, or an empty string if
+ * the argument is NULL. The string is copied, so it's safe to free any
+ * memory associated with the passed argument.
+ *
+ * @param pool        The memory pool, which should contain enough memory
+ *                    to store the tokens
+ * @param str         The Null-terminated C string. If str is NULL then create
+ *                    an empty string.
+ * @return            The string value or NULL if there was an error, most
+ *                    likely an out of memory error
+ */
 tensor_str_t *tensor_str_create(tensor_pool_t *pool, char *str);
 
-// Duplicate a string and return it
+/**
+ * Duplicate a string
+ *
+ * Creates a copy of an existing string
+ *
+ * @param pool        The memory pool, which should contain enough memory
+ *                    to store the tokens
+ * @param str         The string to duplicate.
+ * @return            The duplicated string value or NULL if there was an error,
+ *                    most likely an out of memory error
+ */
 tensor_str_t *tensor_str_dup(tensor_pool_t *pool, tensor_str_t *str);
 
-// Return true if two strings are equal
+/**
+ * Check if two strings are equal
+ *
+ * Returns true if the two strings are exactly equal.
+ *
+ * @param a           The first string argument.
+ * @param b           The second string argument.
+ * @return            Returns true if the two strings are exactly equal, 
+ *                    or are both empty.
+ */
 bool tensor_str_equals(tensor_str_t *a, tensor_str_t *b);
 
-// Concatenate a printf statement to a string, return true on success
+/**
+ * Append a printf-formatted string with arguments to a string
+ *
+ * 
+ *
+ * @param dst         The first string argument.
+ * @param fmt         The format of the string to append, with the
+ *                    same semantics as printf. Use further argumentd
+ *                    to specify the values to insert into the formatted
+ *                    string.
+ * @return            Returns true on success, or false if there was an 
+ *                    error, maybe due to a memory allocation error.
+ */
 bool tensor_str_printf(tensor_str_t *dst, const char *fmt, ...);
 
-// Concatenate a string to a string, return true on success
+/**
+ * Concatenate a string to another string
+ *
+ * @param dst         The destination string, which will be appended to
+ * @param src         The source string
+ * @return            Returns true on success, or false if there was an 
+ *                    error, maybe due to a memory allocation error.
+ */
 bool tensor_str_concat(tensor_str_t *dst, tensor_str_t *src);
 
-// Return the length of a string
+/**
+ * Return the length of a string
+ *
+ * @param str         The string argument
+ * @return            Returns the length of the string, in characters.
+ */
 size_t tensor_str_len(tensor_str_t *str);
 
-// Empty a string (set length to zero)
+/**
+ * Empty a string to set it to zero length
+ *
+ * @param str         The string argument
+ */
 void tensor_str_zero(tensor_str_t *str);
 
-// Return the string as a cstring, up to size bytes, including null terminator
+/**
+ * Create a null-terminated string
+ *
+ * @param dst         The destination Null-terminated C string
+ * @param size        The maximum number of bytes to copy to the destination
+ * @param src         The source string
+ * @return            Returns the destination string, or NULL if there was an
+ *                   error, most likely an out of memory error
+ */
 const char *tensor_cstring(char *dst, size_t size, tensor_str_t *src);
 
 /**
