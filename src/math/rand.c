@@ -75,30 +75,20 @@ double tensor_math_randn_float64(tensor_math_rand_generator_t *generator, double
     assert(generator);
 
     double value;
-    if (isnan(generator->cached))
+    if (!isnan(generator->cached))
     {
         value = generator->cached;
         generator->cached = NAN;
     }
     else
     {
-        double x;
-        double y;
-        double r;
-        do
-        {
-            x = 2.0 * tensor_math_rand_float64(generator);
-            y = 2.0 * tensor_math_rand_float64(generator);
-            r = x * x + y * y;
-        } while (r == 0.0 || r > 1.0);
-
-        double d = sqrt(-2.0 * log(r) / r);
-        double n1 = x * d;
-        double n2 = y * d;
-
-        value = n1;
-        generator->cached = n2;
+        double x = tensor_math_rand_float64(generator);
+        double y = tensor_math_rand_float64(generator);
+        double r = sqrt(-2.0 * log(x));
+        double z1 = r * cos(2.0 * M_PI * y);
+        double z2 = r * sin(2.0 * M_PI * y);
+        value = z1;
+        generator->cached = z2;
     }
-
-    return value  * std + mean;
+    return value * std + mean;
 }

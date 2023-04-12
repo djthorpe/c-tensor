@@ -57,7 +57,7 @@ void test_rand_003()
     tensor_math_rand_generator_t *generator = tensor_math_rand_generator_create(pool, 1);
     for (int i = 0; i < 100; i++)
     {
-        double value = tensor_math_randn_float64(generator, 0.5, 1.0);
+        double value = tensor_math_randn_float64(generator, 0.0, 1.0);
         printf("value = %f\n", value);
     }
     tensor_pool_destroy(pool);
