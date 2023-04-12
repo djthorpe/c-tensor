@@ -13,6 +13,9 @@ struct tensor_str_csv_instance
 
     // The token delimiters
     char* delimiters;
+
+    // In quote
+    bool in_quote;
 };
 
 #endif

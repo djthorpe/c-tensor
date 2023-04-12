@@ -16,12 +16,14 @@ static const char *tensor_str_token_type_cstring(tensor_token_type_t type)
     {
     case START_T:
         return "START_T";
+    case END_T:
+        return "END_T";
     case TEXT_T:
         return "TEXT_T";
     case DELIMITER_T:
         return "DELIMITER_T";
-    case EOL_T:
-        return "EOL_T";
+    case IGNORE_T:
+        return "IGNORE_T";
     default:
         return NULL;
     }
@@ -173,9 +175,15 @@ tensor_str_token_t *tensor_str_tokenize(tensor_pool_t *pool, tensor_str_t *str, 
 }
 
 // Return the next token in the list, or NULL if there are no next tokens defined
-inline tensor_str_token_t *tensor_str_token_next(tensor_str_token_t *token)
+tensor_str_token_t *tensor_str_token_next(tensor_str_token_t *token)
 {
     assert(token != NULL);
+
+    // Skip over any IGNORE_T tokens
+    while (token->next && token->next->token_type == IGNORE_T)
+    {
+        token = token->next;
+    }
     return token->next;
 }
 
@@ -226,7 +234,8 @@ tensor_str_t *tensor_str_token_describe(tensor_pool_t *pool, tensor_str_token_t 
     return str;
 }
 
-inline bool tensor_str_token_is_delimiter(tensor_str_token_t *token, const char delimiter) {
+inline bool tensor_str_token_is_delimiter(tensor_str_token_t *token, const char delimiter)
+{
     assert(token != NULL);
     return token->token_type == DELIMITER_T && token->str->size == 1 && token->str->data[0] == delimiter;
 }

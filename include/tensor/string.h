@@ -12,9 +12,10 @@
 typedef enum
 {
     START_T,     // Start of string
+    END_T,       // End of line
     TEXT_T,      // Text token
     DELIMITER_T, // Deimiter token or CSV field separator
-    EOL_T,       // Newline or CSV end of record
+    IGNORE_T,    // Ignore token
 } tensor_token_type_t;
 
 // Opaque string
@@ -56,11 +57,11 @@ const char *tensor_cstring(char *dst, size_t size, tensor_str_t *src);
 
 /**
  * Describe a tensor
- * 
- * Return information about the tensor, including the tensor id, data type, 
+ *
+ * Return information about the tensor, including the tensor id, data type,
  * shape and whether it's a value node or an operation node.
  *
- * @param pool        The memory pool, which should contain enough memory 
+ * @param pool        The memory pool, which should contain enough memory
  *                    to store the description sttrin
  * @param tensor      The tensor
  * @return            A string of the tensor description, or NULL if an error
@@ -70,10 +71,10 @@ tensor_str_t *tensor_str_describe(tensor_pool_t *pool, tensor_t *tensor);
 
 /**
  * Return a tensor value as a string
- * 
+ *
  * Return the tensor in a string representation.
  *
- * @param pool        The memory pool, which should contain enough memory 
+ * @param pool        The memory pool, which should contain enough memory
  *                    to store the description sttrin
  * @param tensor      The tensor
  * @return            A string of the tensor, or NULL if an error
@@ -86,12 +87,12 @@ tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor);
 
 /**
  * Create a list of tokens from a string
- * 
+ *
  * Create a list of tokens from a string, separated by the given set of
- * delimiters. The first token is always of type START_T. Use 
+ * delimiters. The first token is always of type START_T. Use
  * tensor_str_token_next() to iterate through the list of tokens.
  *
- * @param pool        The memory pool, which should contain enough memory 
+ * @param pool        The memory pool, which should contain enough memory
  *                    to store the tokens
  * @param str         The string to tokenize
  * @param delimiters  A string containing the delimiters to use to separate the
@@ -153,7 +154,6 @@ tensor_str_t *tensor_str_token_str(tensor_str_token_t *token);
  */
 tensor_str_t *tensor_str_token_describe(tensor_pool_t *pool, tensor_str_token_t *token);
 
-
 /**
  * Return true if token is a delimiter
  *
@@ -185,7 +185,7 @@ tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep);
 /**
  * Consume a string of CSV data and return the fields as a list of tokens.
  *
- * You can call this method repeatedly to append more data. 
+ * You can call this method repeatedly to append more data.
  *
  * @param csv    The CSV parser object which was constructed using tensor_str_csv_create()
  * @return       A list of tokens which have been parsed, or NULL if an error occurred

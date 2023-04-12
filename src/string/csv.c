@@ -64,13 +64,47 @@ tensor_str_token_t *tensor_str_csv_parse(tensor_str_csv_t *csv, tensor_str_t *st
         // Return non-delimiter tokens as text
         if (token->token_type == DELIMITER_T)
         {
-            if(tensor_str_token_is_delimiter(token, '\n')) {
-                // TODO: if the last token was also EOL_T then ignore this one
-                token->token_type = EOL_T;
-                token->str = NULL;
-
-            } else if (!tensor_str_token_is_delimiter(token, csv->sep))
+            if (tensor_str_token_is_delimiter(token, '"'))
             {
+                // If not in a quote, then change to TEXT_T
+                if (csv->in_quote)
+                {
+                    // Peak forward to the next quote
+                    if (token->next != NULL && tensor_str_token_is_delimiter(token->next, '"'))
+                    {
+                        // Set current token to TEXT_T and when we move to the next token,
+                        // it will be ignored
+                        token->token_type = TEXT_T;
+                    }
+                    else
+                    {
+                        // Otherwise, we are out of the quote
+                        csv->in_quote = false;
+                        token->token_type = IGNORE_T;
+                    }
+                }
+                else
+                {
+                    csv->in_quote = true;
+                    token->token_type = IGNORE_T;
+                }
+            }
+            else if (tensor_str_token_is_delimiter(token, '\n'))
+            {
+                if (csv->in_quote)
+                {
+                    token->token_type = TEXT_T;
+                }
+                else
+                {
+                    // TODO: if the last token was also EOL_T then ignore this one
+                    token->token_type = END_T;
+                    token->str = NULL;
+                }
+            }
+            else if (!tensor_str_token_is_delimiter(token, csv->sep))
+            {
+                // TODO: Ignore whitespace after a delimiter
                 token->token_type = TEXT_T;
             }
         }
@@ -78,8 +112,6 @@ tensor_str_token_t *tensor_str_csv_parse(tensor_str_csv_t *csv, tensor_str_t *st
         // Move to next token
         token = tensor_str_token_next(token);
     }
-
-    // TODO: If the last token is not EOL_T then append one
 
     return head;
 }

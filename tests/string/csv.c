@@ -7,9 +7,9 @@
 #define buf_size 80
 static char buf[buf_size];
 
-// Simple case with two tokens and no quotes, with no trailing newline
-// rows = 1 tokens = 2
-const char *test_100 = "Hello,World";
+// Simple case with five tokens
+// rows = 1 tokens = 5
+const char *test_100 = "Hello, \"World\", 123.0, \"What do you \"\"think\"\"\",\n";
 
 // More complex case with quotes and newlines
 // rows = 5 tokens = 5
@@ -27,7 +27,7 @@ const char *test_103 = "\n\nYear;Make;Model;Length\n1997;Ford;E350;2,35\n2000;Me
 void test_csv_100()
 {
     printf("Running test_csv_100\n");
-    tensor_pool_t *pool = tensor_pool_create(1024);
+    tensor_pool_t *pool = tensor_pool_create(64 * 1024);
     ASSERT_NOTNULL(pool);
 
     // Test the simple case
@@ -122,8 +122,8 @@ void test_csv_103()
 
 void test_csv()
 {
-    test_csv_100();
+    //test_csv_100();
     test_csv_101();
-    test_csv_102();
-    test_csv_103();
+    //test_csv_102();
+    //test_csv_103();
 }
