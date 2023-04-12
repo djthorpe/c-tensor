@@ -2,6 +2,10 @@
 #ifndef TENSOR_STRING_H
 #define TENSOR_STRING_H
 
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+
 ///////////////////////////////////////////////////////////////////////////////
 
 // Token types

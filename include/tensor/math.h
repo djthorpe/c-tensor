@@ -2,11 +2,14 @@
 #ifndef TENSOR_MATH_H
 #define TENSOR_MATH_H
 
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+
 ///////////////////////////////////////////////////////////////////////////////
 
 // Opaque random number generator
 typedef struct tensor_math_rand_generator_instance tensor_math_rand_generator_t;
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,6 +19,6 @@ typedef struct tensor_math_rand_generator_instance tensor_math_rand_generator_t;
  * @param generator Random number generator
  * @return Random number between 0.0 and 1.0
 */
-double tensor_math_rand_float64(tensor_math_rand_generator_t *generator)
+double tensor_math_rand_float64(tensor_math_rand_generator_t *generator);
 
 #endif

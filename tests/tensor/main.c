@@ -1,4 +1,3 @@
-#include <tensor/tensor.h>
 
 void test_pool();
 void test_scalar();

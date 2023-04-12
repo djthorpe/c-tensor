@@ -9,6 +9,7 @@ add_subdirectory(src/math)
 # Unit Tests
 add_subdirectory(tests/tensor)
 add_subdirectory(tests/string)
+add_subdirectory(tests/math)
 
 # Examples
 add_subdirectory(examples/main)

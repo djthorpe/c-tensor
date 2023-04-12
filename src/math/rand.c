@@ -40,6 +40,7 @@ double tensor_math_rand_float64(tensor_math_rand_generator_t *generator)
     return ((double)generator->seed / m);
 }
 
+/*
 //===========================================================================
 //=  Function to generate normally distributed random variable using the    =
 //=  Box-Muller method                                                      =
@@ -75,3 +76,4 @@ double tensor_math_randn_float64(tensor_math_rand_generator_t *generator)
     // Return the normally distributed RV value
     return (norm_rv);
 }
+*/
