@@ -4,6 +4,7 @@ project(tensor VERSION 0.0.1)
 # Libraries
 add_subdirectory(src/tensor)
 add_subdirectory(src/string)
+add_subdirectory(src/math)
 
 # Unit Tests
 add_subdirectory(tests/tensor)

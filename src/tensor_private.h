@@ -2,6 +2,7 @@
 // Public declarations
 #include <tensor/tensor.h>
 #include <tensor/string.h>
+#include <tensor/math.h>
 
 // Private declarations - tensor
 #include "tensor/cast.h"
@@ -16,3 +17,6 @@
 #include "string/csv.h"
 #include "string/string.h"
 #include "string/token.h"
+
+// Private declarations - math
+#include "math/rand.h"
