@@ -3,6 +3,7 @@
     "files.associations": {
         "*.hcl": "terraform",
         "sstream": "c",
-        "tensor_private.h": "c"
+        "tensor_private.h": "c",
+        "inttypes.h": "c"
     }
 }
