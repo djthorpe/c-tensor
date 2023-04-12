@@ -50,10 +50,31 @@ void tensor_str_zero(tensor_str_t *str);
 // Return the string as a cstring, up to size bytes, including null terminator
 const char *tensor_cstring(char *dst, size_t size, tensor_str_t *src);
 
-// Describe the tensor (id, type, op, dimensions, etc.)
+/**
+ * Describe a tensor
+ * 
+ * Return information about the tensor, including the tensor id, data type, 
+ * shape and whether it's a value node or an operation node.
+ *
+ * @param pool        The memory pool, which should contain enough memory 
+ *                    to store the description sttrin
+ * @param tensor      The tensor
+ * @return            A string of the tensor description, or NULL if an error
+ *                    occurred (usually an out of memory error)
+ */
 tensor_str_t *tensor_str_describe(tensor_pool_t *pool, tensor_t *tensor);
 
-// Create a string representation of a tensor
+/**
+ * Return a tensor value as a string
+ * 
+ * Return the tensor in a string representation.
+ *
+ * @param pool        The memory pool, which should contain enough memory 
+ *                    to store the description sttrin
+ * @param tensor      The tensor
+ * @return            A string of the tensor, or NULL if an error
+ *                    occurred (usually an out of memory error)
+ */
 tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor);
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,7 +138,7 @@ void *tensor_str_token_user_data(tensor_str_token_t *token);
 tensor_str_t *tensor_str_token_str(tensor_str_token_t *token);
 
 /**
- * Describe a single token
+ * Describe a token
  *
  * Return a textual description of a token, including the token type, the token string
  *
