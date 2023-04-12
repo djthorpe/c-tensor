@@ -36,7 +36,7 @@ void test_csv_100()
     ASSERT_NOTNULL(csv);
     tensor_str_t *str = tensor_str_create(pool, (char *)test_100);
     ASSERT_NOTNULL(str);
-    tensor_str_token_t *token = tensor_str_csv_parseline(csv, str, NULL);
+    tensor_str_token_t *token = tensor_str_csv_parse(csv, str, NULL);
     ASSERT_NOTNULL(token);
 
     printf("  csv=%s\n", test_100);
