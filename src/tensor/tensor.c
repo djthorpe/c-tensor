@@ -17,42 +17,6 @@ inline uint32_t tensor_id(tensor_t *t)
     return t->id;
 }
 
-const char *tensor_dtype_str(tensor_dtype_t dtype)
-{
-    switch (dtype)
-    {
-    case UINT32_T:
-        return "uint32_t";
-    case INT32_T:
-        return "int32_t";
-    case UINT64_T:
-        return "uint64_t";
-    case INT64_T:
-        return "int64_t";
-    case FLOAT32_T:
-        return "float32_t";
-    case FLOAT64_T:
-        return "float64_t";
-    default:
-        return NULL;
-    }
-}
-
-const char *tensor_op_str(tensor_op_t op)
-{
-    switch (op)
-    {
-    case CAST:
-        return "cast";
-    case MUL_SCALAR:
-        return "mul_scalar";
-    case MUL_MATRIX:
-        return "mul_matrix";
-    default:
-        return "input";
-    }
-}
-
 size_t tensor_dtype_sizeof(tensor_dtype_t dtype)
 {
     switch (dtype)

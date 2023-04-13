@@ -16,6 +16,7 @@
 // Private declarations - string
 #include "string/csv.h"
 #include "string/string.h"
+#include "string/tensor.h"
 #include "string/token.h"
 
 // Private declarations - math

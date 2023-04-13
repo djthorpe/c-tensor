@@ -45,10 +45,4 @@ bool tensor_evaluate(tensor_pool_t *pool, tensor_t *t);
 // Return the data type size
 size_t tensor_dtype_sizeof(tensor_dtype_t dtype);
 
-// Return const char* represtenation of a dtype or NULL
-const char *tensor_dtype_str(tensor_dtype_t dtype);
-
-// Return const char* represtenation of a tensor operation or NULL
-const char *tensor_op_str(tensor_op_t op);
-
 #endif // TENSOR_TENSOR_H

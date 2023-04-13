@@ -2,6 +2,7 @@ add_executable(test_string
     csv.c
     main.c
     string.c
+    tensor.c
     token.c
 )
 
