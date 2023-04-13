@@ -39,17 +39,17 @@ const char *tensor_dtype_str(tensor_dtype_t dtype)
     switch (dtype)
     {
     case UINT32_T:
-        return "uint32_t";
+        return "uint32";
     case INT32_T:
-        return "int32_t";
+        return "int32";
     case UINT64_T:
-        return "uint64_t";
+        return "uint64";
     case INT64_T:
-        return "int64_t";
+        return "int64";
     case FLOAT32_T:
-        return "float32_t";
+        return "float32";
     case FLOAT64_T:
-        return "float64_t";
+        return "float64";
     default:
         return NULL;
     }
@@ -62,9 +62,9 @@ const char *tensor_op_str(tensor_op_t op)
     case CAST:
         return "cast";
     case MUL_SCALAR:
-        return "mul_scalar";
+        return "mulscalar";
     case MUL_MATRIX:
-        return "mul_matrix";
+        return "mulmatrix";
     default:
         return "input";
     }
@@ -84,11 +84,11 @@ tensor_str_t *tensor_str_describe(tensor_pool_t *pool, tensor_t *tensor)
         return NULL;
     }
 
-    if (!tensor_str_printf(str, "%s[%u]<dtype=%s", tensor_type_str(tensor), tensor->id, tensor_dtype_str(tensor->dtype)))
+    if (!tensor_str_printf(str, "%s[id=%u dtype=%s", tensor_type_str(tensor), tensor->id, tensor_dtype_str(tensor->dtype)))
     {
         return NULL;
     }
-    if (!tensor_str_printf(str, ">"))
+    if (!tensor_str_printf(str, "]"))
     {
         return NULL;
     }

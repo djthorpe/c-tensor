@@ -129,6 +129,24 @@ void tensor_str_zero(tensor_str_t *str);
 const char *tensor_cstring(char *dst, size_t size, tensor_str_t *src);
 
 /**
+ * Return true if the string has a specific prefix
+ *
+ * @param src         The source string
+ * @param prefix      The prefix value
+ * @return            Returns true if the string has the prefix
+ */
+bool tensor_str_has_prefix(tensor_str_t *src,const char* prefix);
+
+/**
+ * Return true if the string has a specific suffix
+ *
+ * @param src         The source string
+ * @param suffix      The suffix value
+ * @return            Returns true if the string has the suffix
+ */
+bool tensor_str_has_suffix(tensor_str_t *src,const char* suffix);
+
+/**
  * Describe a tensor
  *
  * Return information about the tensor, including the tensor id, data type,

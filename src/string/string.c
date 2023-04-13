@@ -160,7 +160,9 @@ const char *tensor_cstring(char *dst, size_t size, tensor_str_t *src)
     if (size > src->size)
     {
         size = src->size;
-    } else {
+    }
+    else
+    {
         size--;
     }
 
@@ -300,4 +302,44 @@ bool tensor_str_printf(tensor_str_t *dst, const char *fmt, ...)
 
     // Return success
     return true;
+}
+
+/**
+ * Return true if the string has a specific prefix
+ */
+bool tensor_str_has_prefix(tensor_str_t *src, const char *prefix)
+{
+    assert(src);
+    assert(prefix);
+
+    // Check size first
+    size_t len = strlen(prefix);
+    if (src->size < len)
+    {
+        return false;
+    }
+
+    // Compare the strings
+    assert(src->data);
+    return memcmp(src->data, prefix, len) == 0;
+}
+
+/**
+ * Return true if the string has a specific suffix
+ */
+bool tensor_str_has_suffix(tensor_str_t *src, const char *suffix)
+{
+    assert(src);
+    assert(suffix);
+
+    // Check size first
+    size_t len = strlen(suffix);
+    if (src->size < len)
+    {
+        return false;
+    }
+
+    // Compare the strings
+    assert(src->data);
+    return memcmp(src->data + src->size - len, suffix, len) == 0;
 }
