@@ -70,7 +70,7 @@ inline double tensor_math_rand_float64(tensor_math_rand_generator_t *generator)
 }
 
 // Generate a normalized random number using the box-muller method
-double tensor_math_randn_float64(tensor_math_rand_generator_t *generator, double mean, double std)
+double tensor_math_randn_float64(tensor_math_rand_generator_t *generator, double mean, double variance)
 {
     assert(generator);
 
@@ -90,5 +90,5 @@ double tensor_math_randn_float64(tensor_math_rand_generator_t *generator, double
         value = z1;
         generator->cached = z2;
     }
-    return value * std + mean;
+    return value * variance + mean;
 }

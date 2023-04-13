@@ -63,9 +63,9 @@ int64_t tensor_math_rand_int63(tensor_math_rand_generator_t *generator);
  * 
  * @param generator    Random number generator
  * @param mean         Mean value
- * @param std          Standard deviation
+ * @param variance     Standard deviation or variance
  * @return             Random number that fits within the distribution
  */
-double tensor_math_randn_float64(tensor_math_rand_generator_t *generator, double mean, double std);
+double tensor_math_randn_float64(tensor_math_rand_generator_t *generator, double mean, double variance);
 
 #endif
