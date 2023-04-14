@@ -89,8 +89,11 @@ static struct tensor_graph_node *tensor_graph_node_evaluate(tensor_graph_t *grap
     assert(node != NULL);
     assert(node->tensor != NULL);
     tensor_debug(graph->pool, "Evaluating node %s\n", tensor_cstring(buf, buf_size, tensor_str_describe(graph->pool, node->tensor)));
-    // TODO: Handle the error condition
-    tensor_evaluate(graph->pool, node->tensor);
+    if(!tensor_evaluate(graph->pool, node->tensor)) {
+        tensor_debug(graph->pool, "  failed, stopping evaluation process\n");
+        graph->success = false;
+        return NULL;
+    };
     return node->next;
 }
 
@@ -149,6 +152,7 @@ tensor_t *tensor_graph_evaluate(tensor_graph_t *graph)
     assert(graph->right != NULL);
 
     // We evaluate from left to right
+    graph->success = true;
     struct tensor_graph_node *node = graph->left;
     while (node != NULL)
     {
@@ -157,5 +161,5 @@ tensor_t *tensor_graph_evaluate(tensor_graph_t *graph)
     }
 
     // Return the output node
-    return graph->right->tensor;
+    return graph->success ? graph->right->tensor : false;
 }

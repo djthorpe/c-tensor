@@ -24,6 +24,9 @@ struct tensor_graph_instance
 
     // The rightmost node for evaluation
     struct tensor_graph_node *right;
+
+    // The success condition
+    bool success;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

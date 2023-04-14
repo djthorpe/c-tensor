@@ -182,7 +182,7 @@ bool tensor_evaluate(tensor_pool_t *pool, tensor_t *t)
     }
     if (success)
     {
-        tensor_debug(pool, "  tensor_evaluate: %s\n", tensor_cstring(buf, buf_size, tensor_str_print(pool, t)));
+        tensor_debug(pool, "  tensor_evaluate: %s\n", tensor_cstring(buf, buf_size, tensor_str_describe(pool, t)));
     }
     else
     {
