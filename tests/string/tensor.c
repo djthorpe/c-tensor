@@ -121,7 +121,7 @@ void test_tensor_010()
     tensor_pool_t *pool = tensor_pool_create(1024);
     ASSERT_NOTNULL(pool);
 
-    tensor_t *vector = tensor_int32_vec(pool, 4, (int32_t[]){12, 34, 56, 78}, );
+    tensor_t *vector = tensor_int32_vec(pool, 4, (int32_t[]){12, 34, 56, 78});
     ASSERT_NOTNULL(vector);
 
     tensor_str_t *str = tensor_str_describe(pool, vector);

@@ -105,13 +105,84 @@ extern uint64_t tensor_uint64_value(tensor_t *t);
 extern float tensor_float32_value(tensor_t *t);
 extern double tensor_float64_value(tensor_t *t);
 
-// Create a vector with given values, returns NULL on error
-extern tensor_t *tensor_int32_vec(tensor_pool_t *pool, int32_t *values, uint32_t nelems);
-extern tensor_t *tensor_uint32_vec(tensor_pool_t *pool, uint32_t *values, uint32_t nelems);
-extern tensor_t *tensor_int64_vec(tensor_pool_t *pool, int64_t *values, uint32_t nelems);
-extern tensor_t *tensor_uint64_vec(tensor_pool_t *pool, uint64_t *values, uint32_t nelems);
-extern tensor_t *tensor_float32_vec(tensor_pool_t *pool, float *values, uint32_t nelems);
-extern tensor_t *tensor_float64_vec(tensor_pool_t *pool, double *values, uint32_t nelems);
+/**
+ * Create a vector of data type int32
+ *
+ * Returns a one-dimensional vector filled with elements from the given array.
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param nelems      The number of elements in the vector.
+ * @param elems    The array of elements. If NULL, the vector is filled with zeros.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool.
+ */
+tensor_t *tensor_int32_vec(tensor_pool_t *pool, uint32_t nelems, int32_t *elems);
+
+/**
+ * Create a vector of data type uint32
+ *
+ * Returns a one-dimensional vector filled with elements from the given array.
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param nelems      The number of elements in the vector.
+ * @param elems    The array of elements. If NULL, the vector is filled with zeros.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool.
+ */
+tensor_t *tensor_uint32_vec(tensor_pool_t *pool, uint32_t nelems, uint32_t *elems);
+
+/**
+ * Create a vector of data type int64
+ *
+ * Returns a one-dimensional vector filled with elements from the given array.
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param nelems      The number of elements in the vector.
+ * @param elems    The array of elements. If NULL, the vector is filled with zeros.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool.
+ */
+tensor_t *tensor_int64_vec(tensor_pool_t *pool, uint32_t nelems, int64_t *elems);
+
+/**
+ * Create a vector of data type uint64
+ *
+ * Returns a one-dimensional vector filled with elements from the given array.
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param nelems      The number of elements in the vector.
+ * @param elems    The array of elements. If NULL, the vector is filled with zeros.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool.
+ */
+tensor_t *tensor_uint64_vec(tensor_pool_t *pool, uint32_t nelems, uint64_t *elems);
+
+/**
+ * Create a vector of data type float32
+ *
+ * Returns a one-dimensional vector filled with elements from the given array.
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param nelems      The number of elements in the vector.
+ * @param elems    The array of elements. If NULL, the vector is filled with zeros.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool.
+ */
+tensor_t *tensor_float32_vec(tensor_pool_t *pool, uint32_t nelems, float *elems);
+
+
+/**
+ * Create a vector of data type float64
+ *
+ * Returns a one-dimensional vector filled with elements from the given array.
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param nelems      The number of elements in the vector.
+ * @param elems    The array of elements. If NULL, the vector is filled with zeros.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool.
+ */
+tensor_t *tensor_float64_vec(tensor_pool_t *pool, uint32_t nelems, double *elems);
 
 ///////////////////////////////////////////////////////////////////////////////
 // OPERATIONS

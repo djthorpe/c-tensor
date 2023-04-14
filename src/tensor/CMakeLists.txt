@@ -4,7 +4,9 @@ add_library(tensor STATIC
     hashmap.c
     mul.c
     pool.c
+    scalar.c
     tensor.c
+    vector.c
 )
 
 target_include_directories(tensor PRIVATE

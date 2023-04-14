@@ -52,7 +52,7 @@ void test_scalar_001()
 {
     printf("Running test_scalar_001 (int32 cast)\n");
 
-    tensor_pool_t *pool = tensor_pool_create(2 * 1024);
+    tensor_pool_t *pool = tensor_pool_create(64 * 1024);
     ASSERT_NOTNULL(pool);
 
     // cast int32 -> uint32

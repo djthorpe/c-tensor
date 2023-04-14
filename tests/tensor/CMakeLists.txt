@@ -2,6 +2,7 @@ add_executable(test_tensor
     main.c
     pool.c
     scalar.c
+    vector.c
 )
 
 target_include_directories(test_tensor PRIVATE
