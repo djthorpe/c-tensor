@@ -1,7 +1,7 @@
 BUILD_DIR := build
 SRC_DIR := $(filter-out src/tensor_private.h, $(wildcard src/*))
 EXAMPLES_DIR := $(wildcard examples/*)
-TESTS_DIR := $(wildcard tests/*)
+TESTS_DIR := $(filter-out tests/test.h, $(wildcard tests/*))
 
 # Paths to tools needed in dependencies
 CMAKE := $(shell which cmake)
@@ -19,7 +19,9 @@ examples: $(EXAMPLES_DIR)
 
 tests: $(TESTS_DIR)
 	@echo run tests
-	@${BUILD_DIR}/test/tensor/test_tensor 
+	@${BUILD_DIR}/tests/tensor/test_tensor 
+	@${BUILD_DIR}/tests/string/test_string
+	@${BUILD_DIR}/tests/math/test_math
 
 $(SRC_DIR): dependencies mkdir
 	@echo make src $(notdir $@)

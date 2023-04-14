@@ -113,6 +113,7 @@ tensor_str_t *tensor_pool_alloc_str(tensor_pool_t *pool, size_t size)
     // Initialize string
     str->size = size;
     str->constant = false;
+    str->hash = 0;
     str->next = pool->str;
     pool->str = str;
     return str;

@@ -113,6 +113,9 @@ tensor_str_t *tensor_str_dup(tensor_pool_t *pool, tensor_str_t *a)
         memcpy(str->data, a->data, a->size);
     }
 
+    // Set hash value
+    str->hash = a->hash;
+
     // Return the string
     return str;
 }
@@ -138,6 +141,7 @@ inline void tensor_str_zero(tensor_str_t *str)
 {
     assert(str != NULL);
     str->size = 0;
+    str->hash = 0;
     free(str->data);
     str->data = NULL;
 }
@@ -195,9 +199,20 @@ inline bool tensor_str_equals(tensor_str_t *a, tensor_str_t *b)
         return true;
     }
 
-    // Compare the strings
+    // Data should be allocated for strings here
     assert(a->data != NULL);
     assert(b->data != NULL);
+
+    // Compare the strings by checking differing hashes if computed
+    if (a->hash != 0 && b->hash != 0)
+    {
+        if (a->hash != b->hash)
+        {
+            return false;
+        }
+    }
+
+    // Compare the long way
     return memcmp(a->data, b->data, a->size) == 0;
 }
 
@@ -218,6 +233,9 @@ bool tensor_str_concat(tensor_str_t *dst, tensor_str_t *src)
     {
         return false;
     }
+
+    // Reset the hash value
+    dst->hash = 0;
 
     // If the destination string is empty, then copy
     if (dst->size == 0)
@@ -289,6 +307,7 @@ bool tensor_str_printf(tensor_str_t *dst, const char *fmt, ...)
     }
     else
     {
+        dst->hash = 0;
         dst->data = data;
     }
 

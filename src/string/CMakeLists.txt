@@ -1,5 +1,6 @@
 add_library(tensor_string STATIC
     csv.c
+    hash.c
     string.c
     tensor.c
     token.c

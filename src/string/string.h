@@ -15,6 +15,9 @@ struct tensor_str_instance
     // Constant strings cannot be manipulated or free'd (they are tokens)
     bool constant;
 
+    // Hash value of the string, or zero if not computed or empty
+    uint64_t hash;
+
     // Next string in the pool
     tensor_str_t *next;
 };

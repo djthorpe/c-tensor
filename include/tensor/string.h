@@ -111,6 +111,17 @@ bool tensor_str_concat(tensor_str_t *dst, tensor_str_t *src);
 size_t tensor_str_len(tensor_str_t *str);
 
 /**
+ * Return the hash value of a string
+ * 
+ * The hash value can be used to compare strings quickly.
+ *
+ * @param str         The string argument
+ * @return            Returns the hash value of the string. Returns zero if
+ *                    the string is empty.
+ */
+uint64_t tensor_str_hash(tensor_str_t *str);
+
+/**
  * Empty a string to set it to zero length
  *
  * @param str         The string argument
