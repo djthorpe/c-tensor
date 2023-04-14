@@ -121,9 +121,66 @@ tensor_str_t *tensor_str_describe(tensor_pool_t *pool, tensor_t *tensor)
     return str;
 }
 
+static bool tensor_str_print_dim(tensor_str_t *str, tensor_t *tensor, uint32_t *index, uint8_t dim)
+{
+    assert(str);
+    assert(tensor);
+    assert(index);
+
+    if(dim == 0) {
+        return tensor_str_print_dtype(str, tensor->dtype, tensor_get_value(tensor, index));
+    } else {
+        if(!tensor_str_printf(str, "[")) {
+            return false;
+        }
+        for(uint32_t i = 0; i < tensor->dims[dim - 1]; i++) {
+            index[dim - 1] = i;
+            if(!tensor_str_print_dim(str, tensor, index, dim - 1)) {
+                return false;
+            }
+            if(i < tensor->dims[dim - 1] - 1) {
+                if(!tensor_str_printf(str, ",")) {
+                    return false;
+                }
+            }
+        }
+        if(!tensor_str_printf(str, "]")) {
+            return false;
+        }
+        return true;
+    }
+}
+
 /**
  * Return a tensor value as a string
  */
+tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor)
+{
+    assert(pool);
+    assert(tensor);
+    assert(tensor->data);
+
+    tensor_str_t *str = tensor_str_create(pool, NULL);
+    if (str == NULL)
+    {
+        return NULL;
+    }
+
+    // If the tensor is a scalar, print it
+    if (tensor_is_scalar(tensor))
+    {
+        return tensor_str_print_dtype(str, tensor->dtype, tensor->data) ? str : NULL;
+    }
+
+    uint32_t index[tensor->ndims];
+    if(!tensor_str_print_dim(str, tensor, index)) {
+        return NULL;
+    } else {
+        return str;
+    }
+}
+
+/**
 tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor)
 {
     assert(pool);
@@ -208,3 +265,4 @@ tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor)
 
     return str;
 }
+*/
