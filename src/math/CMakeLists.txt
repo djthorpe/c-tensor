@@ -1,5 +1,6 @@
 add_library(tensor_math STATIC
     rand.c
+    sum.c
 )
 
 target_include_directories(tensor_math PRIVATE
