@@ -181,6 +181,22 @@ inline bool tensor_is_vector(tensor_t *t)
     return t->ndims == 1;
 }
 
+/**
+ * Return number of tensor dimensions
+ */
+inline uint8_t tensor_ndims(tensor_t *t) {
+    assert(t);
+    return t->ndims;
+}
+
+/**
+ * Return number of tensor elements
+ */
+inline uint32_t tensor_nelems(tensor_t *t) {
+    assert(t);
+    return t->nvalues;
+}
+
 // Evaluate the tensor values from the input tensors and the
 // operation. The tensor values are stored in the tensor data
 // return true on successful evaluation

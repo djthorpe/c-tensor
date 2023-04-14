@@ -34,7 +34,7 @@ typedef struct tensor_pool_instance tensor_pool_t;
 typedef struct tensor_graph_instance tensor_graph_t;
 
 ///////////////////////////////////////////////////////////////////////////////
-// TENSORS
+// RETURN TENSOR INFORMATION
 
 /**
  * Return a unique identifier for the tensor
@@ -60,6 +60,26 @@ bool tensor_is_scalar(tensor_t *t);
  * @return            Returns true if the tensor is a vector value (with one dimension)
  */
 bool tensor_is_vector(tensor_t *t);
+
+/**
+ * Return number of tensor dimensions
+ *
+ * @param t           The tensor
+ * @return            Returns the number of dimensions in the tensor
+ *                   (0 for a scalar, 1 for a vector, etc.)
+ */
+uint8_t tensor_ndims(tensor_t *t);
+
+/**
+ * Return number of tensor elements
+ *
+ * @param t           The tensor
+ * @return            Returns the number of elements in the tensor
+ */
+uint32_t tensor_nelems(tensor_t *t);
+
+///////////////////////////////////////////////////////////////////////////////
+// CREATE TENSORS
 
 /**
  * Create a int32 tensor
