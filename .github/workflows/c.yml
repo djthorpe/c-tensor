@@ -1,9 +1,7 @@
-name: C/C++ CI
+name: Run all tests
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 jobs:
@@ -13,10 +11,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
     - name: make config
       run: make config
     - name: make tests
