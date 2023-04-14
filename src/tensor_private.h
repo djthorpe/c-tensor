@@ -22,3 +22,4 @@
 
 // Private declarations - math
 #include "math/rand.h"
+#include "math/sum.h"
