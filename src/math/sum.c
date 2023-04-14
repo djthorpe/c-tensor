@@ -10,12 +10,12 @@
 // PRIVATE METHODS
 
 ///////////////////////////////////////////////////////////////////////////////
-// PUBLIC METHODS - SUM ADD
+// PUBLIC METHODS - SUM
 
 /**
  * Add two int32 values, and return. If overflow then set the overflow flag.
  */
-int64_t tensor_math_sum_add_int32(int32_t a, int32_t b, bool *overflow)
+int32_t tensor_math_sum_int32(int32_t a, int32_t b, bool *overflow)
 {
     if (a == 0)
     {
@@ -39,16 +39,14 @@ int64_t tensor_math_sum_add_int32(int32_t a, int32_t b, bool *overflow)
             *overflow = true;
         }
     }
-    else
-    {
-        return a + b;
-    }
+
+    return a + b;
 }
 
 /**
  * Add two uint32 values, and return. If overflow then set the overflow flag.
  */
-uint64_t tensor_math_sum_add_uint32(uint32_t a, uint32_t b, bool *overflow)
+uint32_t tensor_math_sum_uint32(uint32_t a, uint32_t b, bool *overflow)
 {
     if (a == 0)
     {
@@ -65,16 +63,13 @@ uint64_t tensor_math_sum_add_uint32(uint32_t a, uint32_t b, bool *overflow)
             *overflow = true;
         }
     }
-    else
-    {
-        return a + b;
-    }
+    return a + b;
 }
 
 /**
  * Add two int64 values, and return. If overflow then set the overflow flag.
  */
-int64_t tensor_math_sum_add_int64(int64_t a, int64_t b, bool *overflow)
+int64_t tensor_math_sum_int64(int64_t a, int64_t b, bool *overflow)
 {
     if (a == 0)
     {
@@ -98,16 +93,13 @@ int64_t tensor_math_sum_add_int64(int64_t a, int64_t b, bool *overflow)
             *overflow = true;
         }
     }
-    else
-    {
-        return a + b;
-    }
+    return a + b;
 }
 
 /**
  * Add two uint64 values, and return. If overflow then set the overflow flag.
  */
-uint64_t tensor_math_sum_add_uint64(uint64_t a, uint64_t b, bool *overflow)
+uint64_t tensor_math_sum_uint64(uint64_t a, uint64_t b, bool *overflow)
 {
     if (a == 0)
     {
@@ -124,16 +116,13 @@ uint64_t tensor_math_sum_add_uint64(uint64_t a, uint64_t b, bool *overflow)
             *overflow = true;
         }
     }
-    else
-    {
-        return a + b;
-    }
+    return a + b;
 }
 
 /**
  * Sum a series of int32 elements. If overflow then set the overflow flag.
  */
-int32_t tensor_math_sum_add_int32_vec(uint32_t nelems, int32_t *elems, bool *overflow)
+int32_t tensor_math_sum_int32_vec(uint32_t nelems, int32_t *elems, bool *overflow)
 {
     assert(elems != NULL);
     assert(nelems > 0);
@@ -141,7 +130,7 @@ int32_t tensor_math_sum_add_int32_vec(uint32_t nelems, int32_t *elems, bool *ove
     int32_t sum = 0;
     for (uint32_t i = 0; i < nelems; i++)
     {
-        sum = tensor_math_sum_add_int32(sum, elems[i], overflow);
+        sum = tensor_math_sum_int32(sum, elems[i], overflow);
     }
     return sum;
 }
@@ -149,7 +138,7 @@ int32_t tensor_math_sum_add_int32_vec(uint32_t nelems, int32_t *elems, bool *ove
 /**
  * Sum a series of uint32 elements. If overflow then set the overflow flag.
  */
-uint32_t tensor_math_sum_add_int32_vec(uint32_t nelems, uint32_t *elems, bool *overflow)
+uint32_t tensor_math_sum_uint32_vec(uint32_t nelems, uint32_t *elems, bool *overflow)
 {
     assert(elems != NULL);
     assert(nelems > 0);
@@ -157,7 +146,7 @@ uint32_t tensor_math_sum_add_int32_vec(uint32_t nelems, uint32_t *elems, bool *o
     uint32_t sum = 0;
     for (uint32_t i = 0; i < nelems; i++)
     {
-        sum = tensor_math_sum_add_uint32(sum, elems[i], overflow);
+        sum = tensor_math_sum_uint32(sum, elems[i], overflow);
     }
     return sum;
 }
@@ -165,7 +154,7 @@ uint32_t tensor_math_sum_add_int32_vec(uint32_t nelems, uint32_t *elems, bool *o
 /**
  * Sum a series of int64 elements. If overflow then set the overflow flag.
  */
-int64_t tensor_math_sum_add_int32_vec(uint32_t nelems, int64_t *elems, bool *overflow)
+int64_t tensor_math_sum_int64_vec(uint32_t nelems, int64_t *elems, bool *overflow)
 {
     assert(elems != NULL);
     assert(nelems > 0);
@@ -173,7 +162,7 @@ int64_t tensor_math_sum_add_int32_vec(uint32_t nelems, int64_t *elems, bool *ove
     int64_t sum = 0;
     for (uint32_t i = 0; i < nelems; i++)
     {
-        sum = tensor_math_sum_add_int64(sum, elems[i], overflow);
+        sum = tensor_math_sum_int64(sum, elems[i], overflow);
     }
     return sum;
 }
@@ -181,7 +170,7 @@ int64_t tensor_math_sum_add_int32_vec(uint32_t nelems, int64_t *elems, bool *ove
 /**
  * Sum a series of uint64 elements. If overflow then set the overflow flag.
  */
-uint64_t tensor_math_sum_add_int64_vec(uint32_t nelems, uint64_t *elems, bool *overflow)
+uint64_t tensor_math_sum_uint64_vec(uint32_t nelems, uint64_t *elems, bool *overflow)
 {
     assert(elems != NULL);
     assert(nelems > 0);
@@ -189,7 +178,7 @@ uint64_t tensor_math_sum_add_int64_vec(uint32_t nelems, uint64_t *elems, bool *o
     uint64_t sum = 0;
     for (uint32_t i = 0; i < nelems; i++)
     {
-        sum = tensor_math_sum_add_uint64(sum, elems[i], overflow);
+        sum = tensor_math_sum_uint64(sum, elems[i], overflow);
     }
     return sum;
 }
@@ -197,7 +186,7 @@ uint64_t tensor_math_sum_add_int64_vec(uint32_t nelems, uint64_t *elems, bool *o
 /**
  * Sum a series of float32 elements.
  */
-float tensor_math_sum_add_float32_vec(uint32_t nelems, float *elems)
+float tensor_math_sum_float32_vec(uint32_t nelems, float *elems)
 {
     assert(elems != NULL);
     assert(nelems > 0);
@@ -213,7 +202,7 @@ float tensor_math_sum_add_float32_vec(uint32_t nelems, float *elems)
 /**
  * Sum a series of float64 elements.
  */
-double tensor_math_sum_add_float64_vec(uint32_t nelems, double *elems)
+double tensor_math_sum_float64_vec(uint32_t nelems, double *elems)
 {
     assert(elems != NULL);
     assert(nelems > 0);
@@ -225,4 +214,3 @@ double tensor_math_sum_add_float64_vec(uint32_t nelems, double *elems)
     }
     return sum;
 }
-
