@@ -62,16 +62,94 @@ bool tensor_is_scalar(tensor_t *t);
 bool tensor_is_vector(tensor_t *t);
 
 /**
- * Create a tensor with zero values
+ * Create a int32 tensor
  *
  * @param pool        The memory pool to use for creating the tensor operation
- * @param type        The data type of the tensor elements
  * @param dims        The shape of the tensor. Set to NULL to return a scalar
- *                    value.
+ *                    value, or provide an array of dimensions for a tensor, with
+ *                    the last dimension followed by a zero.
+ * @param elems       The elements of the tensor. The number of elements must
+ *                    match the number of elements implied by the dimensions,
+ *                    or can be NULL to create a tensor with zero values.
  * @return            Returns a tensor or NULL on error. Typically the error will be due
  *                    to insufficient memory in the pool.
  */
-tensor_t *tensor_create(tensor_pool_t *pool, tensor_dtype_t type, uint32_t *dims);
+tensor_t *tensor_create_int32(tensor_pool_t *pool, uint32_t *dims, int32_t *elems);
+
+/**
+ * Create a uint32 tensor
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param dims        The shape of the tensor. Set to NULL to return a scalar
+ *                    value, or provide an array of dimensions for a tensor, with
+ *                    the last dimension followed by a zero.
+ * @param elems       The elements of the tensor. The number of elements must
+ *                    match the number of elements implied by the dimensions,
+ *                    or can be NULL to create a tensor with zero values.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool.
+ */
+tensor_t *tensor_create_uint32(tensor_pool_t *pool, uint32_t *dims, uint32_t *elems);
+
+/**
+ * Create a int64 tensor
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param dims        The shape of the tensor. Set to NULL to return a scalar
+ *                    value, or provide an array of dimensions for a tensor, with
+ *                    the last dimension followed by a zero.
+ * @param elems       The elements of the tensor. The number of elements must
+ *                    match the number of elements implied by the dimensions,
+ *                    or can be NULL to create a tensor with zero values.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool.
+ */
+tensor_t *tensor_create_int64(tensor_pool_t *pool, uint32_t *dims, int64_t *elems);
+
+/**
+ * Create a uint64 tensor
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param dims        The shape of the tensor. Set to NULL to return a scalar
+ *                    value, or provide an array of dimensions for a tensor, with
+ *                    the last dimension followed by a zero.
+ * @param elems       The elements of the tensor. The number of elements must
+ *                    match the number of elements implied by the dimensions,
+ *                    or can be NULL to create a tensor with zero values.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool.
+ */
+tensor_t *tensor_create_uint64(tensor_pool_t *pool, uint32_t *dims, uint64_t *elems);
+
+/**
+ * Create a float32 tensor
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param dims        The shape of the tensor. Set to NULL to return a scalar
+ *                    value, or provide an array of dimensions for a tensor, with
+ *                    the last dimension followed by a zero.
+ * @param elems       The elements of the tensor. The number of elements must
+ *                    match the number of elements implied by the dimensions,
+ *                    or can be NULL to create a tensor with zero values.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool.
+ */
+tensor_t *tensor_create_float32(tensor_pool_t *pool, uint32_t *dims, float *elems);
+
+/**
+ * Create a float64 tensor
+ *
+ * @param pool        The memory pool to use for creating the tensor operation
+ * @param dims        The shape of the tensor. Set to NULL to return a scalar
+ *                    value, or provide an array of dimensions for a tensor, with
+ *                    the last dimension followed by a zero.
+ * @param elems       The elements of the tensor. The number of elements must
+ *                    match the number of elements implied by the dimensions,
+ *                    or can be NULL to create a tensor with zero values.
+ * @return            Returns a tensor or NULL on error. Typically the error will be due
+ *                    to insufficient memory in the pool.
+ */
+tensor_t *tensor_create_float64(tensor_pool_t *pool, uint32_t *dims, double *elems);
 
 /**
  * Create a tensor with random values which fit a normal distribution
@@ -169,7 +247,6 @@ tensor_t *tensor_uint64_vec(tensor_pool_t *pool, uint32_t nelems, uint64_t *elem
  *                    to insufficient memory in the pool.
  */
 tensor_t *tensor_float32_vec(tensor_pool_t *pool, uint32_t nelems, float *elems);
-
 
 /**
  * Create a vector of data type float64

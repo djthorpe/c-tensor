@@ -1,6 +1,7 @@
 add_executable(test_tensor
     main.c
     pool.c
+    tensor.c
     scalar.c
     vector.c
 )

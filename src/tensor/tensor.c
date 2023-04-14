@@ -125,11 +125,46 @@ tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_
     return t;
 }
 
-inline tensor_t *tensor_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_t *dims)
-{
-    assert(pool != NULL);
-    assert(dims != NULL);
-    return tensor_dtype_create(pool, dtype, dims, NULL);
+/**
+ * Create a int32 tensor
+ */
+inline tensor_t *tensor_create_int32(tensor_pool_t *pool, uint32_t *dims, int32_t *elems) {
+    return tensor_dtype_create(pool, INT32_T, dims, elems);
+}
+
+/**
+ * Create a uint32 tensor
+ */
+inline tensor_t *tensor_create_uint32(tensor_pool_t *pool, uint32_t *dims, uint32_t *elems) {
+    return tensor_dtype_create(pool, INT32_T, dims, elems);
+}
+
+/**
+ * Create a int64 tensor
+ */
+inline tensor_t *tensor_create_int64(tensor_pool_t *pool, uint32_t *dims, int64_t *elems) {
+    return tensor_dtype_create(pool, INT64_T, dims, elems);
+}
+
+/**
+ * Create a uint64 tensor
+ */
+inline tensor_t *tensor_create_uint64(tensor_pool_t *pool, uint32_t *dims, uint64_t *elems) {
+    return tensor_dtype_create(pool, UINT64_T, dims, elems);
+}
+
+/**
+ * Create a float32 tensor
+ */
+inline tensor_t *tensor_create_float32(tensor_pool_t *pool, uint32_t *dims, float *elems) {
+    return tensor_dtype_create(pool, FLOAT32_T, dims, elems);
+}
+
+/**
+ * Create a float64 tensor
+ */
+inline tensor_t *tensor_create_float64(tensor_pool_t *pool, uint32_t *dims, double *elems) {
+    return tensor_dtype_create(pool, FLOAT64_T, dims, elems);
 }
 
 // Return true if the tensor is a scalar
