@@ -15,7 +15,7 @@
 // Create a CSV parser, with the given separator (usually ',', ';' or '\t')
 tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep)
 {
-    assert(pool != NULL);
+    assert(pool);
 
     tensor_str_csv_t *csv = tensor_pool_alloc(pool, sizeof(tensor_str_csv_t), NULL);
     if (csv == NULL)
@@ -24,12 +24,11 @@ tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep)
     }
 
     // Initialize the CSV parser
-    csv->pool = pool;
     csv->sep = sep ? sep : ',';
 
     // Allocate the delimiters we are going to use
     // to split the tokens
-    csv->delimiters = tensor_pool_alloc(pool, 5, NULL);
+    csv->delimiters = tensor_pool_alloc(pool, 6, NULL);
     if (csv->delimiters == NULL)
     {
         return NULL;
@@ -37,8 +36,9 @@ tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep)
     csv->delimiters[0] = '#';
     csv->delimiters[1] = '"';
     csv->delimiters[2] = '\n';
-    csv->delimiters[3] = csv->sep;
-    csv->delimiters[4] = 0;
+    csv->delimiters[3] = ' ';
+    csv->delimiters[4] = csv->sep;
+    csv->delimiters[5] = 0;
 
     // Return success
     return csv;
@@ -46,13 +46,14 @@ tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep)
 
 // Consume a string of CSV data and return the fields as a list of tokens.
 // Returns NULL on error.
-tensor_str_token_t *tensor_str_csv_parse(tensor_str_csv_t *csv, tensor_str_t *str, void *user_data)
+tensor_str_token_t *tensor_str_csv_parse(tensor_pool_t *pool, tensor_str_csv_t *csv, tensor_str_t *str, void *user_data)
 {
-    assert(csv != NULL);
-    assert(str != NULL);
+    assert(pool);
+    assert(csv);
+    assert(str);
 
     // Tokenize the string
-    tensor_str_token_t *head = tensor_str_tokenize(csv->pool, str, csv->delimiters, true, user_data);
+    tensor_str_token_t *head = tensor_str_tokenize(pool, str, csv->delimiters, true, user_data);
     if (head == NULL)
     {
         return NULL;

@@ -36,21 +36,35 @@ tensor_pool_t *tensor_pool_create(uint32_t memsize)
     return pool;
 }
 
+// Free resources from a tensor pool, but don't destroy the pool
+void tensor_pool_zero(tensor_pool_t *pool)
+{
+    assert(pool);
+    assert(pool->mem);
+
+    // Free string data
+    for (tensor_str_t *str = pool->str; str != NULL;)
+    {
+        tensor_str_t *next = str->next;
+        if (!str->constant && str->data)
+        {
+            free(str->data);
+        }
+        str = next;
+    }
+
+    // Reset memory
+    pool->memused = 0;
+    pool->nallocs = 0;
+    pool->str = NULL;
+}
+
 // Free resources from a tensor pool
 void tensor_pool_destroy(tensor_pool_t *pool)
 {
     if (pool)
     {
-        // Free string data
-        for (tensor_str_t *str = pool->str; str != NULL;)
-        {
-            tensor_str_t *next = str->next;
-            if (!str->constant && str->data)
-            {
-                free(str->data);
-            }
-            str = next;
-        }
+        tensor_pool_zero(pool);
         free(pool->mem);
         free(pool);
     }

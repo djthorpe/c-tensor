@@ -5,14 +5,11 @@
 
 struct tensor_str_csv_instance
 {
-    // The memory pool
-    tensor_pool_t* pool;
-    
     // The field separator
     char sep;
 
     // The token delimiters
-    char* delimiters;
+    char *delimiters;
 
     // In quote
     bool in_quote;

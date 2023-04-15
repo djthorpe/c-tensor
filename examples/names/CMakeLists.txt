@@ -8,5 +8,5 @@ target_include_directories(names PRIVATE
 
 target_link_libraries(names 
     tensor
-    tensor_csv
+    tensor_string
 )

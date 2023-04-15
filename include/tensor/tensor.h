@@ -355,7 +355,7 @@ extern tensor_t *tensor_graph_evaluate(tensor_graph_t *graph);
  * @return            The memory pool, or NULL if it could not be created due to
  *                    insufficient memory.
  */
-extern tensor_pool_t *tensor_pool_create(uint32_t memsize);
+tensor_pool_t *tensor_pool_create(uint32_t memsize);
 
 /**
  * Destroy a memory pool, freeing all resources
@@ -365,7 +365,17 @@ extern tensor_pool_t *tensor_pool_create(uint32_t memsize);
  *
  * @param pool        The memory pool
  */
-extern void tensor_pool_destroy(tensor_pool_t *pool);
+void tensor_pool_destroy(tensor_pool_t *pool);
+
+/**
+ * Reset a memory pool, freeing all resources
+ *
+ * The memory resources (including string data) are invalidated, so the pool
+ * can be reused
+ *
+ * @param pool        The memory pool
+ */
+void tensor_pool_zero(tensor_pool_t *pool);
 
 /**
  * Allocate memory from the memory pool and set a unique id for the memory

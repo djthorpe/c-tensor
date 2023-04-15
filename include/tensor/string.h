@@ -112,7 +112,7 @@ size_t tensor_str_len(tensor_str_t *str);
 
 /**
  * Return the hash value of a string
- * 
+ *
  * The hash value can be used to compare strings quickly.
  *
  * @param str         The string argument
@@ -146,7 +146,7 @@ const char *tensor_cstring(char *dst, size_t size, tensor_str_t *src);
  * @param prefix      The prefix value
  * @return            Returns true if the string has the prefix
  */
-bool tensor_str_has_prefix(tensor_str_t *src,const char* prefix);
+bool tensor_str_has_prefix(tensor_str_t *src, const char *prefix);
 
 /**
  * Return true if the string has a specific suffix
@@ -155,7 +155,7 @@ bool tensor_str_has_prefix(tensor_str_t *src,const char* prefix);
  * @param suffix      The suffix value
  * @return            Returns true if the string has the suffix
  */
-bool tensor_str_has_suffix(tensor_str_t *src,const char* suffix);
+bool tensor_str_has_suffix(tensor_str_t *src, const char *suffix);
 
 /**
  * Describe a tensor
@@ -275,8 +275,7 @@ bool tensor_str_token_is_delimiter(tensor_str_token_t *token, const char delimit
  * You should call this method before repeatedly calling tensor_str_csv_parse() in order
  * to parse a stream of CSV data.
  *
- * @param pool   The memory pool, which should contain enough memory to store the expected
- *               number of tokens
+ * @param pool   The memory pool for temporary storage
  * @param sep    The CSV field separator, usually ',', ';' or '\t'. If you pass 0 then
  *               the default separator ',' will be used.
  * @return       A CSV parser object, or NULL if an error occurred (usually an out of
@@ -289,10 +288,12 @@ tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep);
  *
  * You can call this method repeatedly to append more data.
  *
+ * @param pool   The memory pool, which should contain enough memory to store the expected
+ *               number of tokens
  * @param csv    The CSV parser object which was constructed using tensor_str_csv_create()
  * @return       A list of tokens which have been parsed, or NULL if an error occurred
  *               (usually an out of memory error)
  */
-tensor_str_token_t *tensor_str_csv_parse(tensor_str_csv_t *csv, tensor_str_t *str, void *user_data);
+tensor_str_token_t *tensor_str_csv_parse(tensor_pool_t *pool, tensor_str_csv_t *csv, tensor_str_t *str, void *user_data);
 
 #endif
