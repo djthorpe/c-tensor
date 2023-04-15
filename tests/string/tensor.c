@@ -144,6 +144,7 @@ void test_tensor_020()
 
     tensor_str_t *str = tensor_str_print(pool, vector);
     ASSERT_NOTNULL(str);
+    printf("  tensor_str_print=%s\n", tensor_cstring(buf, buf_size, str));
     ASSERT_EQUALS_STR("[12,-34,56,-78]", tensor_cstring(buf, buf_size, str));
 
     tensor_pool_destroy(pool);
@@ -160,6 +161,7 @@ void test_tensor_021()
 
     tensor_str_t *str = tensor_str_print(pool, vector);
     ASSERT_NOTNULL(str);
+    printf("  tensor_str_print=%s\n", tensor_cstring(buf, buf_size, str));
     ASSERT_EQUALS_STR("[12,34,56,78]", tensor_cstring(buf, buf_size, str));
 
     tensor_pool_destroy(pool);

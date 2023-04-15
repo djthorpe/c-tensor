@@ -71,7 +71,7 @@ void test_string_002()
 void test_string_003()
 {
     printf("Running test_string_003 (tensor_str_printf)\n");
-    tensor_pool_t *pool = tensor_pool_create(1024);
+    tensor_pool_t *pool = tensor_pool_create(64 * 1024);
     ASSERT_NOTNULL(pool);
 
     // Create an empty string and concatenate 10 strings
@@ -89,8 +89,8 @@ void test_string_003()
 
 void test_string_004()
 {
-    printf("Running test_string_003 (tensor_str_dup)\n");
-    tensor_pool_t *pool = tensor_pool_create(1024);
+    printf("Running test_string_004 (tensor_str_dup)\n");
+    tensor_pool_t *pool = tensor_pool_create(64 * 1024);
     ASSERT_NOTNULL(pool);
 
     // Run 10 times

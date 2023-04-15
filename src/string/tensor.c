@@ -99,8 +99,8 @@ const char *tensor_op_str(tensor_op_t op)
  */
 tensor_str_t *tensor_str_describe(tensor_pool_t *pool, tensor_t *tensor)
 {
-    assert(pool != NULL);
-    assert(tensor != NULL);
+    assert(pool);
+    assert(tensor);
 
     tensor_str_t *str = tensor_str_create(pool, NULL);
     if (str == NULL)
@@ -119,36 +119,6 @@ tensor_str_t *tensor_str_describe(tensor_pool_t *pool, tensor_t *tensor)
 
     // Return success
     return str;
-}
-
-static bool tensor_str_print_dim(tensor_str_t *str, tensor_t *tensor, uint32_t *index, uint8_t dim)
-{
-    assert(str);
-    assert(tensor);
-    assert(index);
-
-    if(dim == 0) {
-        return tensor_str_print_dtype(str, tensor->dtype, tensor_get_value(tensor, index));
-    } else {
-        if(!tensor_str_printf(str, "[")) {
-            return false;
-        }
-        for(uint32_t i = 0; i < tensor->dims[dim - 1]; i++) {
-            index[dim - 1] = i;
-            if(!tensor_str_print_dim(str, tensor, index, dim - 1)) {
-                return false;
-            }
-            if(i < tensor->dims[dim - 1] - 1) {
-                if(!tensor_str_printf(str, ",")) {
-                    return false;
-                }
-            }
-        }
-        if(!tensor_str_printf(str, "]")) {
-            return false;
-        }
-        return true;
-    }
 }
 
 /**
@@ -171,13 +141,36 @@ tensor_str_t *tensor_str_print(tensor_pool_t *pool, tensor_t *tensor)
     {
         return tensor_str_print_dtype(str, tensor->dtype, tensor->data) ? str : NULL;
     }
-
-    uint32_t index[tensor->ndims];
-    if(!tensor_str_print_dim(str, tensor, index)) {
+    if (!tensor_str_printf(str, "["))
+    {
         return NULL;
-    } else {
-        return str;
     }
+
+    void *data = tensor->data;
+    assert(data);
+    for (uint32_t i = 0; i < tensor->nvalues; i++, data += tensor_dtype_sizeof(tensor->dtype))
+    {
+        if (!tensor_str_print_dtype(str, tensor->dtype, data))
+        {
+            tensor_str_zero(str);
+            return NULL;
+        }
+        if (i < tensor->nvalues - 1)
+        {
+            if (!tensor_str_printf(str, ","))
+            {
+                tensor_str_zero(str);
+                return NULL;
+            }
+        }
+    }
+
+    if (!tensor_str_printf(str, "]"))
+    {
+        tensor_str_zero(str);
+        return NULL;
+    }
+    return str;
 }
 
 /**

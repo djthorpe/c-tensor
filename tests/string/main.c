@@ -6,9 +6,9 @@ void test_token();
 
 int main()
 {
-    //test_csv();
-    //test_string();
+    test_csv();
+    test_string();
     test_tensor();
-    //test_token();
+    test_token();
     return 0;
 }
