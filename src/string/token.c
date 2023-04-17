@@ -23,6 +23,8 @@ static const char *tensor_str_token_type_cstring(tensor_token_type_t type)
         return "TEXT_T";
     case SPACE_T:
         return "SPACE_T";
+    case QUOTE_T:
+        return "QUOTE_T";
     case DELIMITER_T:
         return "DELIMITER_T";
     case IGNORE_T:
@@ -48,7 +50,7 @@ static bool is_whitespace(const char c)
 
 // Append a token to the end of the list of tokens. Returns NULL if the token
 // could not be appended
-static tensor_str_token_t *tensor_str_token_append(tensor_pool_t *pool, tensor_str_token_t *prev, tensor_token_type_t type, void *user_data)
+tensor_str_token_t *tensor_str_token_append(tensor_pool_t *pool, tensor_str_token_t *prev, tensor_token_type_t type, void *user_data)
 {
     assert(pool != NULL);
 

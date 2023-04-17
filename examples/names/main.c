@@ -6,9 +6,6 @@
 #include <tensor/tensor.h>
 #include <tensor/string.h>
 
-#define buf_size 80
-static char buf[buf_size];
-
 /*
  * Read a line from the input, which is separated by the linefeed.
  * Returns NULL on error, or pointer to an allocated line otherwise.
@@ -60,21 +57,12 @@ bool readfile(FILE *fh, tensor_str_csv_t *csv)
         }
 
         // Parse into tokens
-        tensor_str_token_t *token = tensor_str_csv_parse(pool, csv, str, (void* )lineno);
+        tensor_str_token_t *token = tensor_str_csv_parse(pool, csv, str, (void *)lineno);
         if (token == NULL)
         {
             success = false;
             continue;
         }
-
-        // Print line
-        fputs("  ", stdout);
-        while (token)
-        {
-            fputs(tensor_cstring(buf, buf_size, tensor_str_token_describe(pool, token)), stdout);
-            token = tensor_str_token_next(token);
-        }
-        fputs("\n", stdout);
 
         // Empty the pool
         tensor_pool_zero(pool);
@@ -91,8 +79,8 @@ int main(int argc, char **argv)
 
     if (argc != 2)
     {
-            printf("Usage: %s filename.csv\n", argv[0]);
-            return -1;
+        printf("Usage: %s filename.csv\n", argv[0]);
+        return -1;
     }
 
     // Test the simple case
@@ -103,8 +91,8 @@ int main(int argc, char **argv)
     FILE *fh = fopen(argv[1], "r");
     if (fh == NULL)
     {
-            printf("error opening file: %s\n", argv[1]);
-            return -2;
+        printf("error opening file: %s\n", argv[1]);
+        return -2;
     }
 
     // Read the file
