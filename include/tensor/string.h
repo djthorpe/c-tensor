@@ -20,6 +20,7 @@ typedef enum
     START_T,     // Start of string
     END_T,       // End of line
     TEXT_T,      // Text token
+    SPACE_T,     // Whitespace token
     DELIMITER_T, // Deimiter token or CSV field separator
     IGNORE_T,    // Ignore token
 } tensor_token_type_t;
@@ -265,6 +266,18 @@ tensor_str_t *tensor_str_token_describe(tensor_pool_t *pool, tensor_str_token_t 
  * @return           Returns true if a token is a delimiter
  */
 bool tensor_str_token_is_delimiter(tensor_str_token_t *token, const char delimiter);
+
+
+/*
+ * Return true if the whole token consists of whitespace characters. Returns false
+ * if the token is empty or contains non-whitespace characters
+ * 
+ * @param token       The token to describe
+ * @return            Returns true if the token is whitespace, otherwise returns false
+ */
+bool tensor_str_token_is_whitespace(tensor_str_token_t *token);
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // CSV

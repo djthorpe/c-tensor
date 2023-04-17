@@ -28,7 +28,7 @@ tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep)
 
     // Allocate the delimiters we are going to use
     // to split the tokens
-    csv->delimiters = tensor_pool_alloc(pool, 6, NULL);
+    csv->delimiters = tensor_pool_alloc(pool, 10, NULL);
     if (csv->delimiters == NULL)
     {
         return NULL;
@@ -36,7 +36,7 @@ tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep)
     csv->delimiters[0] = '#';
     csv->delimiters[1] = '"';
     csv->delimiters[2] = '\n';
-    csv->delimiters[3] = ' ';
+    csv->delimiters[3] = '\r';
     csv->delimiters[4] = csv->sep;
     csv->delimiters[5] = 0;
 
@@ -62,7 +62,7 @@ tensor_str_token_t *tensor_str_csv_parse(tensor_pool_t *pool, tensor_str_csv_t *
     tensor_str_token_t *token = head;
     while (token)
     {
-        // Return non-delimiter tokens as text
+        // Return non-delimiter tokens as text or ignore them
         if (token->token_type == DELIMITER_T)
         {
             if (tensor_str_token_is_delimiter(token, '"'))
@@ -105,9 +105,12 @@ tensor_str_token_t *tensor_str_csv_parse(tensor_pool_t *pool, tensor_str_csv_t *
             }
             else if (!tensor_str_token_is_delimiter(token, csv->sep))
             {
-                // TODO: Ignore whitespace after a delimiter
                 token->token_type = TEXT_T;
             }
+        }
+        else if (token->token_type == SPACE_T)
+        {
+            token->token_type = IGNORE_T;
         }
 
         // Move to next token

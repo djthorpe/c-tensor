@@ -9,6 +9,81 @@
 #define buf_size 80
 static char buf[buf_size];
 
+/*
+ * Read a line from the input, which is separated by the linefeed.
+ * Returns NULL on error, or pointer to an allocated line otherwise.
+ * The caller is responsible for freeing the line.
+ */
+char *readline(FILE *fh)
+{
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t bytes = getline(&line, &len, fh);
+    if (bytes == -1)
+    {
+        return NULL;
+    }
+    assert(bytes > 0);
+    assert(line);
+    return line;
+}
+
+bool readfile(FILE *fh, tensor_str_csv_t *csv)
+{
+    // Create a pool for the line tokens
+    tensor_pool_t *pool = tensor_pool_create(2 * 1024);
+    assert(pool);
+
+    // Read lines until exit
+    bool success = true;
+    size_t lineno = 0;
+    while (success)
+    {
+        // Read the line
+        char *line = readline(fh);
+        if (line == NULL)
+        {
+            break;
+        }
+        else
+        {
+            lineno++;
+        }
+
+        // Create the line in the pool
+        tensor_str_t *str = tensor_str_create(pool, line);
+        free(line);
+        if (str == NULL)
+        {
+            success = false;
+            continue;
+        }
+
+        // Parse into tokens
+        tensor_str_token_t *token = tensor_str_csv_parse(pool, csv, str, (void* )lineno);
+        if (token == NULL)
+        {
+            success = false;
+            continue;
+        }
+
+        // Print line
+        fputs("  ", stdout);
+        while (token)
+        {
+            fputs(tensor_cstring(buf, buf_size, tensor_str_token_describe(pool, token)), stdout);
+            token = tensor_str_token_next(token);
+        }
+        fputs("\n", stdout);
+
+        // Empty the pool
+        tensor_pool_zero(pool);
+    }
+
+    // Return success condition
+    return success;
+}
+
 int main(int argc, char **argv)
 {
     tensor_pool_t *pool = tensor_pool_create(1024);
@@ -16,8 +91,8 @@ int main(int argc, char **argv)
 
     if (argc != 2)
     {
-        printf("Usage: %s filename.csv\n", argv[0]);
-        return -1;
+            printf("Usage: %s filename.csv\n", argv[0]);
+            return -1;
     }
 
     // Test the simple case
@@ -28,55 +103,18 @@ int main(int argc, char **argv)
     FILE *fh = fopen(argv[1], "r");
     if (fh == NULL)
     {
-        printf("error opening file: %s\n", argv[1]);
-        return -2;
+            printf("error opening file: %s\n", argv[1]);
+            return -2;
     }
 
-    // Create a pool for the line tokens
-    tensor_pool_t *linepool = tensor_pool_create(2 * 1024);
-    assert(linepool != NULL);
-
-    // Read lines until exit
-    bool success = true;
-    while (success)
+    // Read the file
+    bool success = readfile(fh, csv);
+    if (!success)
     {
-        // Read the line
-        char *line = NULL;
-        size_t len = 0;
-        ssize_t bytes = getline(&line, &len, fh);
-        if (bytes == -1)
-        {
-            break;
-        }
-        assert(line);
-
-        // Parse the line into tokens
-        tensor_str_t *str = tensor_str_create(linepool, line);
-        assert(str);
-        free(line);
-        tensor_str_token_t *token = tensor_str_csv_parse(linepool, csv, str, NULL);
-        if (token == NULL)
-        {
-            printf("error parsing line: %s\n", tensor_cstring(buf, buf_size, str));
-            success = false;
-            continue;
-        }
-        else
-        {
-            fputs("  ",stdout);
-            while (token)
-            {
-                fputs(tensor_cstring(buf, buf_size, tensor_str_token_describe(linepool, token)),stdout);
-                token = tensor_str_token_next(token);
-            }
-            fputs("\n",stdout);            
-        }
-
-        // Empty the pool
-        tensor_pool_zero(linepool);
+        printf("error reading file: %s\n", argv[1]);
+        return -3;
     }
 
-    // Close filehandle, destroy pool
     fclose(fh);
     tensor_pool_destroy(pool);
     return 0;
