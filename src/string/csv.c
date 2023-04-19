@@ -120,9 +120,9 @@ tensor_str_token_t *tensor_str_csv_parse(tensor_pool_t *pool, tensor_str_csv_t *
         }
         else if (token->token_type == SPACE_T)
         {
-            if (!csv->in_text)
+            if (csv->in_quote)
             {
-                token->token_type = IGNORE_T;
+                token->token_type = TEXT_T;
             }
         }
 
