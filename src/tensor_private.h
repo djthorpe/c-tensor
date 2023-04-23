@@ -1,14 +1,14 @@
 
 // Public declarations
-#include <tensor/string.h>
 #include <tensor/base.h>
-#include <tensor/tensor.h>
 #include <tensor/math.h>
+#include <tensor/string.h>
+#include <tensor/tensor.h>
 
 // Private declarations - base
-#include "base/pool.h"
 #include "base/debug.h"
 #include "base/hashmap.h"
+#include "base/pool.h"
 
 // Private declarations - tensor
 #include "tensor/cast.h"

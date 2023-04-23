@@ -16,7 +16,7 @@ void test_rand_000()
     {
         uint64_t value = tensor_math_rand_uint64(generator);
         assert(value >= 0 && value <= UINT64_MAX);
-        printf("value = %llu\n", value);
+        printf("value = %ju\n", value);
     }
     tensor_pool_destroy(pool);
 }
@@ -31,7 +31,7 @@ void test_rand_001()
     {
         int64_t value = tensor_math_rand_int63(generator);
         assert(value >= 0 && value <= INT64_MAX);
-        printf("value = %lld\n", value);
+        printf("value = %jd\n", value);
     }
     tensor_pool_destroy(pool);
 }

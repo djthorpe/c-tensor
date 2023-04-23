@@ -40,7 +40,8 @@ tensor_str_args_t *tensor_str_args_create(tensor_pool_t *pool, int argc, const c
         return NULL;
     }
 
-    // Create a hashmap for the flags
+    // Create a hashmap for the flags - allocate twice the number of arguments
+    // to make it sparse
     ctx->flags = tensor_hashmap_create(pool,argc << 1);
     if (ctx->flags == NULL)
     {
