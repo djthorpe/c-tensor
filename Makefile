@@ -19,9 +19,10 @@ examples: $(EXAMPLES_DIR)
 
 tests: $(TESTS_DIR)
 	@echo run tests
-	@${BUILD_DIR}/tests/tensor/test_tensor 
-	@${BUILD_DIR}/tests/string/test_string
+	@${BUILD_DIR}/tests/base/test_base
 	@${BUILD_DIR}/tests/math/test_math
+	@${BUILD_DIR}/tests/string/test_string
+	@${BUILD_DIR}/tests/tensor/test_tensor 
 
 $(SRC_DIR): dependencies mkdir
 	@echo make src $(notdir $@)
