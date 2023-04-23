@@ -1,6 +1,3 @@
-#include <assert.h>
-
-#include <tensor/tensor.h>
 #include "tensor_private.h"
 
 #define buf_size 80
@@ -12,8 +9,8 @@ static char buf[buf_size];
 // Push a new tensor onto the right hand side
 static struct tensor_graph_node *tensor_graph_push(tensor_graph_t *graph, tensor_t *t)
 {
-    assert(graph != NULL);
-    assert(t != NULL);
+    assert(graph);
+    assert(t);
 
     struct tensor_graph_node *node = tensor_pool_alloc(graph->pool, sizeof(struct tensor_graph_node), NULL);
     if (node == NULL)
@@ -42,7 +39,7 @@ static struct tensor_graph_node *tensor_graph_push(tensor_graph_t *graph, tensor
     return node;
 }
 
-static struct tensor_graph_node *tensor_graph_visit(tensor_graph_t *graph, struct tensor_hashmap *visited, tensor_t *t)
+static struct tensor_graph_node *tensor_graph_visit(tensor_graph_t *graph, tensor_hashmap_t *visited, tensor_t *t)
 {
     assert(visited != NULL);
     assert(t != NULL);
@@ -73,7 +70,7 @@ static struct tensor_graph_node *tensor_graph_visit(tensor_graph_t *graph, struc
     }
 
     // Mark the tensor as visited
-    if (!tensor_hashmap_put(graph->pool, visited, t, node))
+    if (!tensor_hashmap_put(visited, t, node))
     {
         return NULL;
     }
@@ -88,9 +85,9 @@ static struct tensor_graph_node *tensor_graph_node_evaluate(tensor_graph_t *grap
     assert(graph != NULL);
     assert(node != NULL);
     assert(node->tensor != NULL);
-    tensor_debug(graph->pool, "Evaluating node %s\n", tensor_cstring(buf, buf_size, tensor_str_describe(graph->pool, node->tensor)));
+    debug("Evaluating node %s\n", tensor_cstring(buf, buf_size, tensor_str_describe(graph->pool, node->tensor)));
     if(!tensor_evaluate(graph->pool, node->tensor)) {
-        tensor_debug(graph->pool, "  failed, stopping evaluation process\n");
+        debug("  failed, stopping evaluation process\n");
         graph->success = false;
         return NULL;
     };
@@ -103,8 +100,8 @@ static struct tensor_graph_node *tensor_graph_node_evaluate(tensor_graph_t *grap
 // Construct the graph which allows a tensor to be evaluated, returns NULL on error
 tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *t)
 {
-    assert(pool != NULL);
-    assert(t != NULL);
+    assert(pool);
+    assert(t);
 
     // Create a graph
     tensor_graph_t *graph = tensor_pool_alloc(pool, sizeof(tensor_graph_t), NULL);
@@ -131,7 +128,7 @@ tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *t)
     assert(t->a != NULL || t->b != NULL);
 
     // Create a hashmap so we can keep track of what's been visited
-    struct tensor_hashmap *visited = tensor_hashmap_create(pool, pool->nallocs);
+    tensor_hashmap_t *visited = tensor_hashmap_create(pool, pool->nallocs);
 
     // We go through all nodes in the graph
     if (!tensor_graph_visit(graph, visited, t))

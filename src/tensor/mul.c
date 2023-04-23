@@ -1,8 +1,5 @@
 #include <stdlib.h>
-#include <assert.h>
 #include <string.h>
-
-#include <tensor/tensor.h>
 #include "tensor_private.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,7 +38,7 @@ tensor_t *tensor_mul(tensor_pool_t *pool, tensor_t *a, tensor_t *b)
     // If the tensors are not the same type, then return NULL
     if (a->dtype != b->dtype)
     {
-        tensor_debug(pool, "tensor_mul: tensors are not the same dtype");
+        debug("tensor_mul: tensors are not the same dtype\n");
         return NULL;
     }
 
@@ -58,7 +55,7 @@ tensor_t *tensor_mul(tensor_pool_t *pool, tensor_t *a, tensor_t *b)
     // Check for same number of dimensions
     if (a->ndims != b->ndims)
     {
-        tensor_debug(pool, "tensor_mul: tensors do not have same number of dimensions");
+        debug("tensor_mul: tensors do not have same number of dimensions\n");
         return NULL;
     }
 
@@ -67,7 +64,7 @@ tensor_t *tensor_mul(tensor_pool_t *pool, tensor_t *a, tensor_t *b)
     {
         if (a->dims[i] != b->dims[i])
         {
-            tensor_debug(pool, "tensor_mul: tensors do not have same shape");
+            debug("tensor_mul: tensors do not have same shape\n");
             return NULL;
         }
     }

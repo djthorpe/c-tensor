@@ -298,7 +298,7 @@ bool tensor_cast_op(tensor_pool_t *pool, tensor_t *t)
     {
         if (!tensor_cast_copy(dst, t->dtype, src, t->a->dtype))
         {
-            tensor_debug(pool, "tensor_cast_op: tensor<%d>: cast failed from %s to %s\n", tensor_id(t), tensor_dtype_str(t->a->dtype), tensor_dtype_str(t->dtype));
+            debug("tensor_cast_op: tensor<%d>: cast failed from %s to %s\n", tensor_id(t), tensor_dtype_str(t->a->dtype), tensor_dtype_str(t->dtype));
             return false;
         }
     }

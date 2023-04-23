@@ -1,7 +1,5 @@
 #include <stdlib.h>
-#include <assert.h>
 #include <string.h>
-
 #include "tensor_private.h"
 
 #define buf_size 80
@@ -73,14 +71,14 @@ tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_
     // If no size, then return NULL
     if (size == 0)
     {
-        tensor_debug(pool, "tensor_dtype_create failed, zero size\n");
+        debug("tensor_dtype_create failed, zero size\n");
         return NULL;
     }
 
     // Return NULL if no dimensions or too many dimensions
     if (ndims > TENSOR_MAX_DIMS)
     {
-        tensor_debug(pool, "tensor_dtype_create failed, ndims=%d\n", ndims);
+        debug("tensor_dtype_create failed, ndims=%d\n", ndims);
         return NULL;
     }
 
@@ -89,7 +87,7 @@ tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_
     tensor_t *t = tensor_pool_alloc(pool, sizeof(tensor_t), &id);
     if (t == NULL)
     {
-        tensor_debug(pool, "tensor_dtype_create failed, out of memory allocating %ld bytes\n", sizeof(tensor_t));
+        debug("tensor_dtype_create failed, out of memory allocating %ld bytes\n", sizeof(tensor_t));
         return NULL;
     }
 
@@ -97,7 +95,7 @@ tensor_t *tensor_dtype_create(tensor_pool_t *pool, tensor_dtype_t dtype, uint32_
     t->data = tensor_pool_alloc(pool, size * tensor_dtype_sizeof(dtype), NULL);
     if (t->data == NULL)
     {
-        tensor_debug(pool, "tensor_dtype_create failed, out of memory allocating %ld bytes\n", size * tensor_dtype_sizeof(dtype));
+        debug("tensor_dtype_create failed, out of memory allocating %ld bytes\n", size * tensor_dtype_sizeof(dtype));
         return NULL;
     }
     else if (elems != NULL)
@@ -233,11 +231,11 @@ bool tensor_evaluate(tensor_pool_t *pool, tensor_t *t)
     }
     if (success)
     {
-        tensor_debug(pool, "  tensor_evaluate: %s\n", tensor_cstring(buf, buf_size, tensor_str_describe(pool, t)));
+        debug("  tensor_evaluate: %s\n", tensor_cstring(buf, buf_size, tensor_str_describe(pool, t)));
     }
     else
     {
-        tensor_debug(pool, "  tensor_evaluate: failed for %s\n", tensor_cstring(buf, buf_size, tensor_str_describe(pool, t)));
+        debug("  tensor_evaluate: failed for %s\n", tensor_cstring(buf, buf_size, tensor_str_describe(pool, t)));
     }
     return success;
 }

@@ -20,6 +20,8 @@ typedef enum
     START_T,     // Start of string
     END_T,       // End of line
     TEXT_T,      // Text token
+    SPACE_T,     // Whitespace token
+    QUOTE_T,     // Quote token
     DELIMITER_T, // Deimiter token or CSV field separator
     IGNORE_T,    // Ignore token
 } tensor_token_type_t;
@@ -269,6 +271,16 @@ tensor_str_t *tensor_str_token_describe(tensor_pool_t *pool, tensor_str_token_t 
  */
 bool tensor_str_token_is_delimiter(tensor_str_token_t *token, const char delimiter);
 
+
+/*
+ * Return true if the whole token consists of whitespace characters. Returns false
+ * if the token is empty or contains non-whitespace characters
+ * 
+ * @param token       The token to describe
+ * @return            Returns true if the token is whitespace, otherwise returns false
+ */
+bool tensor_str_token_is_whitespace(tensor_str_token_t *token);
+
 ///////////////////////////////////////////////////////////////////////////////
 // CSV
 
@@ -299,18 +311,11 @@ tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep);
  */
 tensor_str_token_t *tensor_str_csv_parse(tensor_pool_t *pool, tensor_str_csv_t *csv, tensor_str_t *str, void *user_data);
 
-///////////////////////////////////////////////////////////////////////////////
-// ARGS
-
 /*
- * Create an args object from a string array of arguments
- * 
- * @param pool   The memory pool, which should contain enough memory to store the expected
- *               number of tokens
- * @param argc   The number of arguments
- * @param argv   The array of arguments
- * @return       An args object, or NULL if an error occurred (usually an out of memory error)
+ * Print a list of tokens as CSV data. The tokens printed are alternatively TEXT, DELIMITER and END
+ * that are used to delimit field contents, end of field and end of row respectively.
+ * Blank lines are skipped.
  */
-tensor_str_args_t *tensor_str_args_create(tensor_pool_t *pool,int argc,const char** argv);
+bool tensor_str_csv_output(tensor_pool_t *pool, tensor_str_csv_t *csv, tensor_str_token_t* tokens);
 
 #endif

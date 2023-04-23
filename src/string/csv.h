@@ -13,6 +13,12 @@ struct tensor_str_csv_instance
 
     // In quote
     bool in_quote;
+
+    // At start of line or delimiter
+    bool in_text;
+
+    // The current row being parsed
+    tensor_str_token_t *row;
 };
 
 #endif
