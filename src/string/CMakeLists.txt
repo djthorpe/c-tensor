@@ -16,4 +16,3 @@ target_include_directories(tensor_string PRIVATE
 target_link_libraries(tensor_string
     tensor_base
 )
-

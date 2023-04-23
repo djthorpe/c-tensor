@@ -16,12 +16,15 @@ struct tensor_str_args_instance
 
     // The hashmap of flags
     tensor_hashmap_t *flags;
+
+    // Whether the arguments have been parsed
+    bool parsed;
 };
 
 struct tensor_str_args_flag_instance
 {
-    // Name
-    tensor_str_t *name;
+    // Flag is a boolean (switch) flag
+    bool boolean;
 
     // Value
     tensor_str_t *value;

@@ -22,7 +22,6 @@ struct tensor_str_token_instance
     tensor_str_token_t *next;
 };
 
-
 /*
  * Append a token to the end of the list of tokens, or create a new token list.
  *

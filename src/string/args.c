@@ -2,10 +2,15 @@
 #include <string.h>
 #include "tensor_private.h"
 
+// TODO
+#define buf_size 80
+static char buf[buf_size];
+
 ///////////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 
-static struct tensor_str_args_flag_instance* tensor_str_args_getflag(tensor_str_args_t *ctx, const char* name) {
+static struct tensor_str_args_flag_instance *tensor_str_args_getflag(tensor_str_args_t *ctx, const char *name)
+{
     assert(ctx);
     assert(name);
     return NULL;
@@ -29,9 +34,11 @@ tensor_str_args_t *tensor_str_args_create(tensor_pool_t *pool, int argc, const c
     {
         return NULL;
     }
-
-    // Set the pool
-    ctx->pool = pool;
+    else
+    {
+        ctx->pool = pool;
+        ctx->parsed = false;
+    }
 
     // Set the command name
     ctx->command = tensor_str_create(pool, (char *)(argv[0]));
@@ -42,7 +49,7 @@ tensor_str_args_t *tensor_str_args_create(tensor_pool_t *pool, int argc, const c
 
     // Create a hashmap for the flags - allocate twice the number of arguments
     // to make it sparse
-    ctx->flags = tensor_hashmap_create(pool,argc << 1);
+    ctx->flags = tensor_hashmap_create(pool, argc << 1);
     if (ctx->flags == NULL)
     {
         return NULL;
@@ -64,6 +71,10 @@ tensor_str_args_t *tensor_str_args_create(tensor_pool_t *pool, int argc, const c
         {
             return NULL;
         }
+        else
+        {
+            prev->str = str;
+        }
 
         // Set the head token
         if (ctx->args == NULL)
@@ -78,19 +89,122 @@ tensor_str_args_t *tensor_str_args_create(tensor_pool_t *pool, int argc, const c
 
 /*
  * Define a flag used to parse the arguments
- *
- * @param ctx                The context
- * @param name               The name of the flag, must be unique
- * @param description        The description of the flag, required
- * @param value              The default value of the flag, or NULL if the flag is required
- * @return                   Returns true if the flag was defined, false otherwise
  */
-bool tensor_str_args_flag_str(tensor_str_args_t *ctx, const char *name, const char *description, const char *value)
+bool tensor_str_args_flag(tensor_str_args_t *ctx, const char *name, const char *description, const char *value)
 {
     assert(ctx);
     assert(name);
+    assert(strlen(name));
     assert(description);
 
-    // Not yet implemented
-    return false;
+    // Check for existing flag - return NULL if it exists
+    if (tensor_hashmap_get_cstring(ctx->flags, name) != NULL)
+    {
+        debug("tensor_str_args_flag: flag '%s' already exists\n", name);
+        return false;
+    }
+
+    // Create a structure for the flag
+    struct tensor_str_args_flag_instance *flag = tensor_pool_alloc(ctx->pool, sizeof(struct tensor_str_args_flag_instance), NULL);
+    if (flag == NULL)
+    {
+        return false;
+    }
+    flag->boolean = false;
+    flag->description = tensor_str_create(ctx->pool, (char *)description);
+    flag->value = tensor_str_create(ctx->pool, (char *)value);
+    if (flag->description == NULL || flag->value == NULL)
+    {
+        return false;
+    }
+
+    // Create flag, return success condition
+    return tensor_hashmap_put_cstring(ctx->flags, ctx->pool, name, flag);
+}
+
+
+/*
+ * Define a boolean flag used to parse the arguments
+ */
+bool tensor_str_args_switch(tensor_str_args_t *ctx, const char *name, const char *description)
+{
+    assert(ctx);
+    assert(name);
+    assert(strlen(name));
+    assert(description);
+
+    // Check for existing flag - return NULL if it exists
+    if (tensor_hashmap_get_cstring(ctx->flags, name) != NULL)
+    {
+        debug("tensor_str_args_switch: flag '%s' already exists\n", name);
+        return false;
+    }
+
+    // Create a structure for the flag
+    struct tensor_str_args_flag_instance *flag = tensor_pool_alloc(ctx->pool, sizeof(struct tensor_str_args_flag_instance), NULL);
+    if (flag == NULL)
+    {
+        return false;
+    }
+    flag->boolean = true;
+    flag->description = tensor_str_create(ctx->pool, (char *)description);
+    flag->value = NULL;
+    if (flag->description == NULL)
+    {
+        return false;
+    }
+
+    // Create flag, return success condition
+    return tensor_hashmap_put_cstring(ctx->flags, ctx->pool, name, flag);
+}
+
+/*
+ * Parse the command line arguments given the defined flags
+ */
+bool tensor_str_args_parse(tensor_str_args_t *ctx)
+{
+    assert(ctx);
+
+    // Only run parse once
+    if (ctx->parsed)
+    {
+        return true;
+    }
+
+    // Iterate through the arguments
+    tensor_str_token_t *token = ctx->args;
+    tensor_str_t *flag = NULL;
+    while (token)
+    {
+        debug("tensor_str_args_parse: %s\n", tensor_cstring(buf, buf_size, tensor_str_token_describe(ctx->pool, token)));
+
+        // If token has a '-' or '--' prefix, then it is a flag
+        if (tensor_str_token_has_prefix(token, "--") && flag == NULL)
+        {
+            flag = tensor_str_ref(ctx->pool, token->str, 2, tensor_str_len(token->str) - 2);
+        }
+        else if (tensor_str_token_has_prefix(token, "-") && flag == NULL)
+        {
+            flag = tensor_str_ref(ctx->pool, token->str, 1, tensor_str_len(token->str) - 1);
+        }
+        else
+        {
+            if (flag)
+            {
+                // TODO: Get the flag from the hashmap and set the value
+                debug("  flag: %s\n", tensor_cstring(buf, buf_size, flag));
+                debug("  value: %s\n", tensor_cstring(buf, buf_size, token->str));
+                flag = NULL;
+            }
+            else
+            {
+                debug("  arg: %s\n", tensor_cstring(buf, buf_size, token->str));
+            }
+        }
+
+        // Move to the next token
+        token = token->next;
+    }
+
+    return ctx->parsed;
 }

@@ -300,3 +300,19 @@ inline bool tensor_str_token_is_whitespace(tensor_str_token_t *token)
     }
     return true;
 }
+
+/*
+ * Return true if the a token is of type TEXT_T and has a specific prefix
+ */
+bool tensor_str_token_has_prefix(tensor_str_token_t *token, const char *prefix) {
+    assert(token);
+    assert(prefix);
+    assert(strlen(prefix));
+    if (token->token_type != TEXT_T || token->str == NULL) {
+        return false;
+    }
+    if (tensor_str_len(token->str) < strlen(prefix)) {
+        return false;
+    }
+    return memcmp(token->str->data, prefix, strlen(prefix)) == 0;
+}

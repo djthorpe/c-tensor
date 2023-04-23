@@ -271,15 +271,23 @@ tensor_str_t *tensor_str_token_describe(tensor_pool_t *pool, tensor_str_token_t 
  */
 bool tensor_str_token_is_delimiter(tensor_str_token_t *token, const char delimiter);
 
-
 /*
  * Return true if the whole token consists of whitespace characters. Returns false
  * if the token is empty or contains non-whitespace characters
- * 
+ *
  * @param token       The token to describe
  * @return            Returns true if the token is whitespace, otherwise returns false
  */
 bool tensor_str_token_is_whitespace(tensor_str_token_t *token);
+
+/*
+ * Return true if the a token is of type TEXT_T and has a specific prefix
+ *
+ * @param token       The token to describe
+ * @param prefix      The prefix to check
+ * @return            Returns true if the token is whitespace, otherwise returns false
+ */
+bool tensor_str_token_has_prefix(tensor_str_token_t *token, const char *prefix);
 
 ///////////////////////////////////////////////////////////////////////////////
 // CSV
@@ -316,8 +324,7 @@ tensor_str_token_t *tensor_str_csv_parse(tensor_pool_t *pool, tensor_str_csv_t *
  * that are used to delimit field contents, end of field and end of row respectively.
  * Blank lines are skipped.
  */
-bool tensor_str_csv_output(tensor_pool_t *pool, tensor_str_csv_t *csv, tensor_str_token_t* tokens);
-
+bool tensor_str_csv_output(tensor_pool_t *pool, tensor_str_csv_t *csv, tensor_str_token_t *tokens);
 
 ///////////////////////////////////////////////////////////////////////////////
 // COMMAND LINE ARGUMENTS
@@ -325,7 +332,7 @@ bool tensor_str_csv_output(tensor_pool_t *pool, tensor_str_csv_t *csv, tensor_st
 /*
  * Create an instance which can parse the comment line arguments
  *
- * @param pool               The memory pool, which should contain enough memory to 
+ * @param pool               The memory pool, which should contain enough memory to
  *                           store the expected arguments and flags
  * @param argc               The number of arguments, which must be one or more
  * @param argv               The arguments, including the command line called in the
@@ -333,5 +340,39 @@ bool tensor_str_csv_output(tensor_pool_t *pool, tensor_str_csv_t *csv, tensor_st
  * @return                   A command line argument parser object, or NULL if an error
  */
 tensor_str_args_t *tensor_str_args_create(tensor_pool_t *pool, int argc, const char **argv);
+
+/*
+ * Define a flag used to parse the arguments
+ *
+ * @param ctx                The context
+ * @param name               The name of the flag, must be unique
+ * @param description        The description of the flag, required
+ * @param value              The default value of the flag, or NULL if the flag is required
+ * @return                   Returns true if the flag was defined, false otherwise
+ */
+bool tensor_str_args_flag(tensor_str_args_t *ctx, const char *name, const char *description, const char *value);
+
+/*
+ * Define a boolean flag used to parse the arguments
+ *
+ * @param ctx                The context
+ * @param name               The name of the flag, must be unique
+ * @param description        The description of the flag, required
+ * @return                   Returns true if the flag was defined, false otherwise
+ */
+bool tensor_str_args_switch(tensor_str_args_t *ctx, const char *name, const char *description);
+
+/*
+ * Parse the command line arguments given the defined flags
+ *
+ * The command line is split into flags and arguments. Flags are defined using the
+ * tensor_str_args_flag() method. Arguments are any other arguments which are not
+ * flags. The arguments are returned as a list of tokens.
+ *
+ * @param ctx                The context
+ * @return                   Returns true if the parse was successful and all required
+ *                           flags were defined, false otherwise
+ */
+bool tensor_str_args_parse(tensor_str_args_t *ctx);
 
 #endif
