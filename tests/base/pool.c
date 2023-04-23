@@ -1,6 +1,5 @@
 #include <stdio.h>
-
-#include <tensor/tensor.h>
+#include <tensor/base.h>
 #include "test.h"
 
 void test_pool_000()

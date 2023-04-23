@@ -1,6 +1,5 @@
 add_executable(test_tensor
     main.c
-    pool.c
     tensor.c
     scalar.c
     vector.c
@@ -12,6 +11,7 @@ target_include_directories(test_tensor PRIVATE
 )
 
 target_link_libraries(test_tensor 
-    tensor
+    tensor_base
     tensor_string
+    tensor_tensor
 )

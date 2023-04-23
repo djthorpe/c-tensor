@@ -1,4 +1,5 @@
 add_executable(test_string
+    args.c
     csv.c
     main.c
     string.c
@@ -12,6 +13,8 @@ target_include_directories(test_string PRIVATE
 )
 
 target_link_libraries(test_string 
-    tensor
+    tensor_base
     tensor_string
+    tensor_tensor
 )
+

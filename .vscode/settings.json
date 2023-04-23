@@ -4,6 +4,7 @@
         "*.hcl": "terraform",
         "sstream": "c",
         "tensor_private.h": "c",
-        "inttypes.h": "c"
+        "inttypes.h": "c",
+        "debug.h": "c"
     }
 }

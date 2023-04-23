@@ -1,6 +1,6 @@
 
-#ifndef TENSOR_TENSOR_H
-#define TENSOR_TENSOR_H
+#ifndef TENSOR_PRIVATE_TENSOR_H
+#define TENSOR_PRIVATE_TENSOR_H
 
 typedef enum
 {
@@ -45,4 +45,4 @@ bool tensor_evaluate(tensor_pool_t *pool, tensor_t *t);
 // Return the data type size
 size_t tensor_dtype_sizeof(tensor_dtype_t dtype);
 
-#endif // TENSOR_TENSOR_H
+#endif // TENSOR_PRIVATE_TENSOR_H

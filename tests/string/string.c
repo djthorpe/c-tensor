@@ -1,7 +1,8 @@
 #include <stdio.h>
 
-#include <tensor/tensor.h>
+#include <tensor/base.h>
 #include <tensor/string.h>
+#include <tensor/tensor.h>
 #include "test.h"
 
 #define buf_size 80

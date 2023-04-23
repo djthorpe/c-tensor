@@ -1,7 +1,8 @@
 #include <stdio.h>
 
-#include <tensor/tensor.h>
+#include <tensor/base.h>
 #include <tensor/string.h>
+#include <tensor/tensor.h>
 #include "test.h"
 
 #define buf_size 80
@@ -35,7 +36,7 @@ void test_csv_100()
     ASSERT_NOTNULL(csv);
     tensor_str_t *str = tensor_str_create(pool, (char *)test_100);
     ASSERT_NOTNULL(str);
-    tensor_str_token_t *token = tensor_str_csv_parse(csv, str, NULL);
+    tensor_str_token_t *token = tensor_str_csv_parse(pool, csv, str, NULL);
     ASSERT_NOTNULL(token);
 
     printf("  csv=%s\n", test_100);
@@ -59,7 +60,7 @@ void test_csv_101()
     ASSERT_NOTNULL(csv);
     tensor_str_t *str = tensor_str_create(pool, (char *)test_101);
     ASSERT_NOTNULL(str);
-    tensor_str_token_t *token = tensor_str_csv_parse(csv, str, NULL);
+    tensor_str_token_t *token = tensor_str_csv_parse(pool, csv, str, NULL);
     ASSERT_NOTNULL(token);
 
     printf("  csv=%s\n", test_101);
@@ -83,7 +84,7 @@ void test_csv_102()
     ASSERT_NOTNULL(csv);
     tensor_str_t *str = tensor_str_create(pool, (char *)test_102);
     ASSERT_NOTNULL(str);
-    tensor_str_token_t *token = tensor_str_csv_parse(csv, str, NULL);
+    tensor_str_token_t *token = tensor_str_csv_parse(pool, csv, str, NULL);
     ASSERT_NOTNULL(token);
 
     printf("  csv=%s\n", test_102);
@@ -107,7 +108,7 @@ void test_csv_103()
     ASSERT_NOTNULL(csv);
     tensor_str_t *str = tensor_str_create(pool, (char *)test_103);
     ASSERT_NOTNULL(str);
-    tensor_str_token_t *token = tensor_str_csv_parse(csv, str, NULL);
+    tensor_str_token_t *token = tensor_str_csv_parse(pool, csv, str, NULL);
     ASSERT_NOTNULL(token);
 
     printf("  csv=%s\n", test_103);

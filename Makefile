@@ -11,7 +11,7 @@ all: config src tests examples
 
 config: dependencies mkdir
 	@echo cmake config
-	@${CMAKE} -B ${BUILD_DIR}
+	@${CMAKE} -B ${BUILD_DIR} -D CMAKE_BUILD_TYPE=Debug
 
 src: $(SRC_DIR)
 

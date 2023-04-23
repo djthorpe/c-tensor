@@ -33,6 +33,9 @@ typedef struct tensor_str_token_instance tensor_str_token_t;
 // Opaque csv
 typedef struct tensor_str_csv_instance tensor_str_csv_t;
 
+// Opaque args
+typedef struct tensor_str_args_instance tensor_str_args_t;
+
 ///////////////////////////////////////////////////////////////////////////////
 // STRINGS
 
@@ -295,5 +298,19 @@ tensor_str_csv_t *tensor_str_csv_create(tensor_pool_t *pool, const char sep);
  *               (usually an out of memory error)
  */
 tensor_str_token_t *tensor_str_csv_parse(tensor_pool_t *pool, tensor_str_csv_t *csv, tensor_str_t *str, void *user_data);
+
+///////////////////////////////////////////////////////////////////////////////
+// ARGS
+
+/*
+ * Create an args object from a string array of arguments
+ * 
+ * @param pool   The memory pool, which should contain enough memory to store the expected
+ *               number of tokens
+ * @param argc   The number of arguments
+ * @param argv   The array of arguments
+ * @return       An args object, or NULL if an error occurred (usually an out of memory error)
+ */
+tensor_str_args_t *tensor_str_args_create(tensor_pool_t *pool,int argc,const char** argv);
 
 #endif

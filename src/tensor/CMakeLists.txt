@@ -1,15 +1,13 @@
-add_library(tensor STATIC
+add_library(tensor_tensor STATIC
     cast.c
     graph.c
-    hashmap.c
     mul.c
-    pool.c
     scalar.c
     tensor.c
     vector.c
 )
 
-target_include_directories(tensor PRIVATE
+target_include_directories(tensor_tensor PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../../include
     ${CMAKE_CURRENT_LIST_DIR}/..
 )

@@ -11,6 +11,7 @@ target_include_directories(test_math PRIVATE
 )
 
 target_link_libraries(test_math 
-    tensor
+    tensor_base
     tensor_math
+    tensor_tensor
 )

@@ -1,6 +1,6 @@
 
-#ifndef TENSOR_H
-#define TENSOR_H
+#ifndef TENSOR_TENSOR_H
+#define TENSOR_TENSOR_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -339,85 +339,5 @@ extern tensor_graph_t *tensor_graph_create(tensor_pool_t *pool, tensor_t *a);
  *                    failing tensor operation.
  */
 extern tensor_t *tensor_graph_evaluate(tensor_graph_t *graph);
-
-///////////////////////////////////////////////////////////////////////////////
-// POOL
-
-/**
- * Create a new memory pool
- *
- * The memory pool is used to a fixed allocation of memory for tensors and graphs.
- * Ensure you allocate enough memory for the pool. The pool is also used to allocate
- * memory for strings and tokens, but as strings can be of arbitrary length, the
- * string data is not stored in the pool.
- *
- * @param memsize     The size of the memory pool in bytes
- * @return            The memory pool, or NULL if it could not be created due to
- *                    insufficient memory.
- */
-tensor_pool_t *tensor_pool_create(uint32_t memsize);
-
-/**
- * Destroy a memory pool, freeing all resources
- *
- * The memory resources (including string data) is freed, and the memory is
- * returned to the system.
- *
- * @param pool        The memory pool
- */
-void tensor_pool_destroy(tensor_pool_t *pool);
-
-/**
- * Reset a memory pool, freeing all resources
- *
- * The memory resources (including string data) are invalidated, so the pool
- * can be reused
- *
- * @param pool        The memory pool
- */
-void tensor_pool_zero(tensor_pool_t *pool);
-
-/**
- * Allocate memory from the memory pool and set a unique id for the memory
- * allocation.
- *
- * @param pool        The memory pool
- * @param size        The size of the memory allocation in bytes
- * @param id          A pointer reference to a unique identifier to be set
- *                    for the memory allocation. Pass NULL if this is not
- *                    required.
- * @return            A pointer to the memory allocation, or NULL if the
- *                    allocation failed due to insufficient memory. In this
- *                    case, increase the size of the memory pool when creating
- *                    the pool.
- */
-extern void *tensor_pool_alloc(tensor_pool_t *pool, size_t size, uint32_t *id);
-
-/**
- * Return the total size of the memory pool in bytes
- *
- * @param pool        The memory pool
- * @return            The size of the memory pool in bytes, not including
- *                    string data.
- */
-extern size_t tensor_pool_size(tensor_pool_t *pool);
-
-/**
- * Return the used size of the memory pool in bytes
- *
- * @param pool        The memory pool
- * @return            The size of the used memory pool in bytes, not including
- *                    string data.
- */
-extern size_t tensor_pool_used(tensor_pool_t *pool);
-
-/**
- * Return the used size for string data in bytes
- *
- * @param pool        The memory pool
- * @return            The size of the string data in bytes, not including
- *                    the memory pool size.
- */
-extern size_t tensor_pool_str_used(tensor_pool_t *pool);
 
 #endif
