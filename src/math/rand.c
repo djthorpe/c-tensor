@@ -1,9 +1,6 @@
-#include <assert.h>
 #include <math.h>
 #include <limits.h>
 #include <time.h>
-
-#include <tensor/math.h>
 #include "tensor_private.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,7 +14,7 @@
  */
 tensor_math_rand_generator_t *tensor_math_rand_generator_create(tensor_pool_t *pool, uint64_t seed)
 {
-    assert(pool != NULL);
+    assert(pool);
 
     // Allocate the random number generator
     tensor_math_rand_generator_t *generator = tensor_pool_alloc(pool, sizeof(tensor_math_rand_generator_t), NULL);

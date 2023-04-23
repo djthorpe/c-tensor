@@ -12,7 +12,7 @@
 // Create a new tensor pool, returns NULL on error
 tensor_pool_t *tensor_pool_create(uint32_t memsize)
 {
-    assert(memsize > 0);
+    assert(memsize);
 
     tensor_pool_t *pool = malloc(sizeof(tensor_pool_t));
     if (pool == NULL)
@@ -72,8 +72,8 @@ void tensor_pool_destroy(tensor_pool_t *pool)
 // and set the id value if it's not NULL
 void *tensor_pool_alloc(tensor_pool_t *pool, size_t size, uint32_t *id)
 {
-    assert(pool != NULL);
-    assert(size > 0);
+    assert(pool);
+    assert(size);
 
     // Align size on boundary
     size = (size + TENSOR_POOL_ALIGN - 1) & ~(TENSOR_POOL_ALIGN - 1);
@@ -98,7 +98,7 @@ void *tensor_pool_alloc(tensor_pool_t *pool, size_t size, uint32_t *id)
 // value. Return NULL if the allocation failed.
 tensor_str_t *tensor_pool_alloc_str(tensor_pool_t *pool, size_t size)
 {
-    assert(pool != NULL);
+    assert(pool);
 
     // Allocate string
     tensor_str_t *str = tensor_pool_alloc(pool, sizeof(tensor_str_t), NULL);
@@ -134,21 +134,21 @@ tensor_str_t *tensor_pool_alloc_str(tensor_pool_t *pool, size_t size)
 // Return size of memory pool
 inline size_t tensor_pool_size(tensor_pool_t *pool)
 {
-    assert(pool != NULL);
+    assert(pool);
     return pool->memsize;
 }
 
 // Return used bytes of memory pool
 inline size_t tensor_pool_used(tensor_pool_t *pool)
 {
-    assert(pool != NULL);
+    assert(pool);
     return pool->memused;
 }
 
 // Return number of used bytes for string data
 size_t tensor_pool_str_used(tensor_pool_t *pool)
 {
-    assert(pool != NULL);
+    assert(pool);
     size_t size = 0;
     for (tensor_str_t *str = pool->str; str != NULL; str = str->next)
     {

@@ -15,7 +15,7 @@ struct tensor_str_args_instance
     tensor_pool_t *pool;
 
     // The hashmap of flags
-    struct tensor_hashmap *flags;
+    tensor_hashmap_t *flags;
 };
 
 struct tensor_str_args_flag_instance

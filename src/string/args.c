@@ -1,7 +1,5 @@
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
-
 #include "tensor_private.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -92,4 +90,6 @@ bool tensor_str_args_flag_str(tensor_str_args_t *ctx, const char *name, const ch
     assert(name);
     assert(description);
 
+    // Not yet implemented
+    return false;
 }

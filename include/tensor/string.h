@@ -318,4 +318,20 @@ tensor_str_token_t *tensor_str_csv_parse(tensor_pool_t *pool, tensor_str_csv_t *
  */
 bool tensor_str_csv_output(tensor_pool_t *pool, tensor_str_csv_t *csv, tensor_str_token_t* tokens);
 
+
+///////////////////////////////////////////////////////////////////////////////
+// COMMAND LINE ARGUMENTS
+
+/*
+ * Create an instance which can parse the comment line arguments
+ *
+ * @param pool               The memory pool, which should contain enough memory to 
+ *                           store the expected arguments and flags
+ * @param argc               The number of arguments, which must be one or more
+ * @param argv               The arguments, including the command line called in the
+ *                           zero-indexed argument
+ * @return                   A command line argument parser object, or NULL if an error
+ */
+tensor_str_args_t *tensor_str_args_create(tensor_pool_t *pool, int argc, const char **argv);
+
 #endif

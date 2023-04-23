@@ -1,9 +1,5 @@
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
-
-#include <tensor/tensor.h>
-#include <tensor/string.h>
 #include "tensor_private.h"
 
 ///////////////////////////////////////////////////////////////////////////////

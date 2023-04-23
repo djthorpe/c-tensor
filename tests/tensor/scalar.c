@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include <tensor/base.h>
 #include <tensor/tensor.h>
 #include "test.h"
 

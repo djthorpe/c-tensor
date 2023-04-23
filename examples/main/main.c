@@ -5,7 +5,7 @@
 int main()
 {
     tensor_pool_t *pool = tensor_pool_create(1024);
-    assert(pool != NULL);
+    assert(pool);
 
     tensor_t *a = tensor_int32(pool, 2);
     assert(a);

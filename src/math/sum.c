@@ -1,9 +1,6 @@
-#include <assert.h>
 #include <math.h>
 #include <limits.h>
 #include <time.h>
-
-#include <tensor/math.h>
 #include "tensor_private.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -124,8 +121,8 @@ uint64_t tensor_math_sum_uint64(uint64_t a, uint64_t b, bool *overflow)
  */
 int32_t tensor_math_sum_int32_vec(uint32_t nelems, int32_t *elems, bool *overflow)
 {
-    assert(elems != NULL);
-    assert(nelems > 0);
+    assert(elems);
+    assert(nelems);
 
     int32_t sum = 0;
     for (uint32_t i = 0; i < nelems; i++)
@@ -140,8 +137,8 @@ int32_t tensor_math_sum_int32_vec(uint32_t nelems, int32_t *elems, bool *overflo
  */
 uint32_t tensor_math_sum_uint32_vec(uint32_t nelems, uint32_t *elems, bool *overflow)
 {
-    assert(elems != NULL);
-    assert(nelems > 0);
+    assert(elems);
+    assert(nelems);
 
     uint32_t sum = 0;
     for (uint32_t i = 0; i < nelems; i++)
@@ -156,8 +153,8 @@ uint32_t tensor_math_sum_uint32_vec(uint32_t nelems, uint32_t *elems, bool *over
  */
 int64_t tensor_math_sum_int64_vec(uint32_t nelems, int64_t *elems, bool *overflow)
 {
-    assert(elems != NULL);
-    assert(nelems > 0);
+    assert(elems);
+    assert(nelems);
 
     int64_t sum = 0;
     for (uint32_t i = 0; i < nelems; i++)
@@ -172,8 +169,8 @@ int64_t tensor_math_sum_int64_vec(uint32_t nelems, int64_t *elems, bool *overflo
  */
 uint64_t tensor_math_sum_uint64_vec(uint32_t nelems, uint64_t *elems, bool *overflow)
 {
-    assert(elems != NULL);
-    assert(nelems > 0);
+    assert(elems);
+    assert(nelems);
 
     uint64_t sum = 0;
     for (uint32_t i = 0; i < nelems; i++)
@@ -188,8 +185,8 @@ uint64_t tensor_math_sum_uint64_vec(uint32_t nelems, uint64_t *elems, bool *over
  */
 float tensor_math_sum_float32_vec(uint32_t nelems, float *elems)
 {
-    assert(elems != NULL);
-    assert(nelems > 0);
+    assert(elems);
+    assert(nelems);
 
     float sum = 0;
     for (uint32_t i = 0; i < nelems; i++)
@@ -204,8 +201,8 @@ float tensor_math_sum_float32_vec(uint32_t nelems, float *elems)
  */
 double tensor_math_sum_float64_vec(uint32_t nelems, double *elems)
 {
-    assert(elems != NULL);
-    assert(nelems > 0);
+    assert(elems);
+    assert(nelems);
 
     double sum = 0;
     for (uint32_t i = 0; i < nelems; i++)
