@@ -20,6 +20,7 @@
 #include "string/args.h"
 #include "string/csv.h"
 #include "string/hash.h"
+#include "string/hashmap.h"
 #include "string/string.h"
 #include "string/tensor.h"
 #include "string/token.h"

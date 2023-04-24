@@ -30,7 +30,6 @@ uint64_t tensor_str_hash_uint64(tensor_str_t *str)
     return hash;
 }
 
-
 /**
  * Return the hash value of a string
  */

@@ -1,6 +1,7 @@
 add_executable(test_string
     args.c
     csv.c
+    hash.c
     main.c
     string.c
     tensor.c
