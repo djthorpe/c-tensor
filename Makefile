@@ -13,6 +13,12 @@ config: dependencies mkdir
 	@echo cmake config
 	@${CMAKE} -B ${BUILD_DIR} -D CMAKE_BUILD_TYPE=Debug
 
+dev: dependencies mkdir
+	@echo cmake config
+	@${CMAKE} -B ${BUILD_DIR} -S dev -D CMAKE_BUILD_TYPE=Debug
+	@echo make
+	@make -C ${BUILD_DIR}
+
 src: $(SRC_DIR)
 
 examples: $(EXAMPLES_DIR)
