@@ -77,6 +77,7 @@ inline double rand_f64(rand_t *generator)
 
 /**
  * Generate a normalized random number using the box-muller method
+ * https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
  */
 double rand_f64_randn(rand_t *generator, double mean, double variance)
 {
