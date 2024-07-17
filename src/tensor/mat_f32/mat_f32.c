@@ -46,6 +46,12 @@ mat_f32_t *mat_f32_alloc(const uint32_t *shape)
     {
         for (int i = 0; i < MAX_DIMS; i++)
         {
+            // End of dimensions
+            if (mat->s[i] == 0)
+            {
+                break;
+            }
+
             // Increment dimensions if size is not 1
             if (mat->s[i] != 1)
             {
@@ -134,10 +140,19 @@ inline int mat_f32_dims(const mat_f32_t *mat)
 /*
  * Returns number of elements
  */
-inline size_t mat_f32_elements(const mat_f32_t *mat)
+inline size_t mat_f32_elements(const mat_f32_t *mat, const int dim)
 {
     ASSERT(mat);
-    return mat->n;
+    ASSERT(dim >= -1 && dim < MAX_DIMS);
+    if (dim == -1)
+    {
+        return mat->n;
+    }
+    if (dim < mat->d)
+    {
+        return mat->s[dim];
+    }
+    return 0;
 }
 
 /*
@@ -186,6 +201,7 @@ inline bool mat_f32_equal(const mat_f32_t *a, const mat_f32_t *b)
  * Reshape a matrix without changing the data
  * Assumes the number of elements is the same
  */
+// TODO: Normalize the shape
 void mat_f32_reshape(mat_f32_t *a, const uint32_t *shape)
 {
     ASSERT(a);
@@ -217,5 +233,5 @@ void mat_f32_reshape(mat_f32_t *a, const uint32_t *shape)
     for (int i = 0; i < d; i++)
     {
         a->s[i] = shape[i];
-    }
+    }    
 }

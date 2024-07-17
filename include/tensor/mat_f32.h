@@ -67,9 +67,14 @@ int mat_f32_dims(const mat_f32_t *v);
 /*
  * @brief Returns number of elements
  *
+ * Returns number of elements for a specific dimension. If dim is -1, then
+ * the total number of elements is returned.
+ *
+ * @param v: Value 
+ * @param dim: Dimension to return elements for, or -1
  * @return: Number of elements
  */
-size_t mat_f32_elements(const mat_f32_t *v);
+size_t mat_f32_elements(const mat_f32_t *v, const int dim);
 
 /*
  * @brief Tests if values a, b have the same shape
@@ -122,6 +127,7 @@ bool mat_f32_resize(mat_f32_t *a, const uint32_t *shape);
 /*
  * @brief Set value elements to a constant
  *
+ * A := B
  * Assumes the b value is a scalar or has the same shape as a.
  *
  * @param v: Value to set
@@ -132,6 +138,7 @@ void mat_f32_set(mat_f32_t *a, const mat_f32_t *b);
 /*
  * @brief Set value as an identity matrix
  *
+ * A := I
  * Assumes the value is a square matrix
  *
  * @param v: Value to set as identity matrix
@@ -139,38 +146,42 @@ void mat_f32_set(mat_f32_t *a, const mat_f32_t *b);
 void mat_f32_set_identity(mat_f32_t *v);
 
 /*
- * @brief Sum elements
+ * @brief Sum elements along a dimension
  *
- * Comoute the sum of elements along a specific dimension and return the 
- * result. If the dimension is -1, then all elements are aggregated and the 
- * output is a scalar. The result is placed in the output value. The 
- * aggregate operation may not be successful if the output value cannot be 
+ * V := SUM(A)
+ *
+ * Compute the sum of elements along a specific dimension and return the
+ * result. If the dimension is -1, then all elements are aggregated and the
+ * output is a scalar. The result is placed in the output value. The
+ * aggregate operation may not be successful if the output value cannot be
  * resized.
  *
- * @param v: Value to sum
+ * @param v: Pointer to output value. If *v is NULL, then a new value
+ *           is allocated. If *v is not NULL, then the value may be resized
+ * @param a: Value to sum
  * @param dim: Dimension to sum along, or -1
- * @param out: Pointer to output value. If *out is NULL, then a new value
- *           is allocated. If *out is not NULL, then the value may be resized
  * @return: True if sum was successful, false otherwise.
  */
-bool mat_f32_sum(const mat_f32_t *v, const int dim, mat_f32_t **out);
+bool mat_f32_sum(mat_f32_t **v, const mat_f32_t *a, const int dim);
 
 /*
- * @brief Mean elements
+ * @brief Mean elements along a dimension
  *
- * Comoute the mean of elements along a specific dimension and return the 
- * result. If the dimension is -1, then all elements are aggregated and the 
- * output is a scalar. The result is placed in the output value. The 
- * aggregate operation may not be successful if the output value cannot be 
+ * V := MEAN(A)
+ *
+ * Compute the mean of elements along a specific dimension and return the
+ * result. If the dimension is -1, then all elements are aggregated and the
+ * output is a scalar. The result is placed in the output value. The
+ * aggregate operation may not be successful if the output value cannot be
  * resized.
  *
- * @param v: Value to sum
- * @param dim: Dimension to sum along, or -1
- * @param out: Pointer to output value. If *out is NULL, then a new value
+ * @param v: Pointer to output value. If *out is NULL, then a new value
  *           is allocated. If *out is not NULL, then the value may be resized
+ * @param a: Value to sum
+ * @param dim: Dimension to sum along, or -1
  * @return: True if sum was successful, false otherwise.
  */
-bool mat_f32_mean(const mat_f32_t *v, const int dim, mat_f32_t **out);
+bool mat_f32_mean(mat_f32_t **v, const mat_f32_t *a, const int dim);
 
 /*
  * @brief Set value elements to a range from 'start' with step 'step'
@@ -184,63 +195,69 @@ bool mat_f32_mean(const mat_f32_t *v, const int dim, mat_f32_t **out);
 void mat_f32_range(mat_f32_t *v, const double start, const double step);
 
 /*
- * Set elements to random values between 0 and 1
+ * @brief Set elements to random values between 0 and 1
+ *
+ * @param v: Value to set
+ * @param seed: Random generator with seed
  */
-void mat_f32_rand(rand_t *seed, mat_f32_t *v);
+void mat_f32_rand(mat_f32_t *v, rand_t *seed);
 
 /*
- * Set elements to random values with mean 0 and variance 1
+ * @brief Set elements to random values with mean 0 and variance 1
+ *
+ * @param v: Value to set
+ * @param seed: Random generator with seed
  */
-void mat_f32_randn(rand_t *seed, mat_f32_t *v);
+void mat_f32_randn(mat_f32_t *v, rand_t *seed);
 
 /*
  * @brief Add two values
  *
- * Naive version of addition, A + B => C
+ * V := A + B
  * Assumes a and c have the same shape, and that b is either the same shape
- * or a scalar value.
+ * or a scalar value. Naive version has no optimizations.
  *
+ * @param v: Output value
  * @param a: First value
  * @param b: Second value or scalar
- * @param c: Output value
  */
-void mat_f32_add_naive(mat_f32_t *a, mat_f32_t *b, mat_f32_t *c);
+void mat_f32_add_naive(mat_f32_t *v, const mat_f32_t *a, const mat_f32_t *b);
 
 /*
  * @brief Subtract one value from another
  *
- * Naive version of subtraction, A - B => C
+ * V := A - B
  * Assumes a and c have the same shape, and that b is either the same shape
- * or a scalar value.
+ * or a scalar value. Naive version has no optimizations.
  *
+ * @param v: Output value
  * @param a: First value
  * @param b: Second value or scalar
- * @param c: Output value
  */
-void mat_f32_sub_naive(mat_f32_t *a, mat_f32_t *b, mat_f32_t *c);
+void mat_f32_sub_naive(mat_f32_t *v, const mat_f32_t *a, const mat_f32_t *b);
 
 /*
  * @brief Multiply element-wise one value with another
  *
- * Naive version of element-wise multiplication, A * B => C
+ * V := A * B
  * Assumes a and c have the same shape, and that b is either the same shape
- * or a scalar value.
+ * or a scalar value. Naive version has no optimizations.
  *
+ * @param v: Output value
  * @param a: First value
  * @param b: Second value or scalar
- * @param c: Output value
  */
-void mat_f32_mul_naive(mat_f32_t *a, mat_f32_t *b, mat_f32_t *c);
+void mat_f32_mul_naive(mat_f32_t *v, const mat_f32_t *a, const mat_f32_t *b);
 
 /*
  * @brief Divide element-wise one value with another
  *
- * Naive version of element-wise multiplication, A / B => C
+ * V := A / B
  * Assumes a and c have the same shape, and that b is either the same shape
- * or a scalar value.
+ * or a scalar value. Naive version has no optimizations.
  *
+ * @param v: Output value
  * @param a: First value
  * @param b: Second value or scalar
- * @param c: Output value
  */
-void mat_f32_div_naive(mat_f32_t *a, mat_f32_t *b, mat_f32_t *c);
+void mat_f32_div_naive(mat_f32_t *v, const mat_f32_t *a, const mat_f32_t *b);

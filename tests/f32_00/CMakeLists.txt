@@ -1,4 +1,4 @@
-set(NAME "base_001")
+set(NAME "f32_00")
 
 add_executable(${NAME}
     main.c

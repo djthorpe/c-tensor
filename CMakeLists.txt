@@ -6,4 +6,5 @@ add_subdirectory(src/tensor)
 
 # Tests
 include(CTest)
-add_subdirectory(tests/base_001)
+add_subdirectory(tests/f32_00)
+add_subdirectory(tests/f32_01)
