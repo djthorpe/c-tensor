@@ -4,7 +4,7 @@
 #include "private.h"
 
 // Compute value offset for a given set of indexes
-size_t mat_f32_offset(const int *s, int d, const int *indexes)
+size_t mat_f32_offset(const uint32_t *s, int d, const int *indexes)
 {
     size_t offset = 0;
     size_t stride = 1;

@@ -7,11 +7,20 @@
 #include "private.h"
 
 /*
+ * Normalize the shape
+ */
+void mat_f32_shape_normalize(uint32_t *shape)
+{
+    ASSERT(shape);
+    // No-op
+}
+
+/*
  * Allocate a new value
  *
  * @return: Pointer to the allocated value or NULL if allocation failed
  */
-mat_f32_t *mat_f32_alloc(int *shape)
+mat_f32_t *mat_f32_alloc(const uint32_t *shape)
 {
     // Allocate memory for the matrix struct
     mat_f32_t *mat = (mat_f32_t *)malloc(sizeof(mat_f32_t));
@@ -20,11 +29,15 @@ mat_f32_t *mat_f32_alloc(int *shape)
         return NULL;
     }
 
-    // Intialize the matrix struct
+    // Intialize the numebr of elements and dimension
     mat->n = 1;
     mat->d = 0;
 
-    // Determine number of values and dimensions
+    // Normalize the shape
+    memcpy(mat->s, shape, MAX_DIMS * sizeof(uint32_t));
+    mat_f32_shape_normalize(mat->s);
+
+    // Determine number of elements and dimensions
     if (shape == NULL || shape[0] == 0)
     {
         mat->s[0] = 0;
@@ -33,22 +46,20 @@ mat_f32_t *mat_f32_alloc(int *shape)
     {
         for (int i = 0; i < MAX_DIMS; i++)
         {
-            mat->s[i] = shape[i];
-            if (shape[i] == 0)
+            // Increment dimensions if size is not 1
+            if (mat->s[i] != 1)
             {
-                break;
+                mat->d++;
             }
-            mat->d++;
-            mat->n *= shape[i];
-        }
-    }
 
-    // If n is larger than INT_MAX then return NULL
-    // A square matrix can have 46340 elements in each dimension
-    if (mat->n > INT_MAX)
-    {
-        free(mat);
-        return NULL;
+            // If n is larger than UINT32_MAX then return NULL
+            mat->n *= shape[i];
+            if (mat->n > UINT32_MAX)
+            {
+                free(mat);
+                return NULL;
+            }
+        }
     }
 
     // Allocate memory for the values
@@ -78,7 +89,7 @@ inline void mat_f32_free(mat_f32_t *mat)
 /*
  * Return true if a value is a scalar
  */
-inline bool mat_f32_is_scalar(mat_f32_t *mat)
+inline bool mat_f32_is_scalar(const mat_f32_t *mat)
 {
     ASSERT(mat);
     return mat->d == 0 ? true : false;
@@ -87,16 +98,34 @@ inline bool mat_f32_is_scalar(mat_f32_t *mat)
 /*
  * Return true if a value is a vector
  */
-inline bool mat_f32_is_vector(mat_f32_t *mat)
+inline bool mat_f32_is_vector(const mat_f32_t *mat)
 {
     ASSERT(mat);
     return mat->d == 1 ? true : false;
 }
 
 /*
+ * Return true if a value is a 2D matrix
+ */
+inline bool mat_f32_is_2d(const mat_f32_t *mat)
+{
+    ASSERT(mat);
+    return mat->d == 2 ? true : false;
+}
+
+/*
+ * Return true if a value is a square 2D matrix
+ */
+inline bool mat_f32_is_square(const mat_f32_t *mat)
+{
+    ASSERT(mat);
+    return mat->d == 2 && mat->s[0] == mat->s[1] ? true : false;
+}
+
+/*
  * Returns number of dimensions
  */
-inline int mat_f32_dims(mat_f32_t *mat)
+inline int mat_f32_dims(const mat_f32_t *mat)
 {
     ASSERT(mat);
     return mat->d;
@@ -105,7 +134,7 @@ inline int mat_f32_dims(mat_f32_t *mat)
 /*
  * Returns number of elements
  */
-inline int mat_f32_elements(mat_f32_t *mat)
+inline size_t mat_f32_elements(const mat_f32_t *mat)
 {
     ASSERT(mat);
     return mat->n;
@@ -114,7 +143,7 @@ inline int mat_f32_elements(mat_f32_t *mat)
 /*
  * Returns true if two values have the same shape
  */
-inline bool mat_f32_equal_shape(mat_f32_t *a, mat_f32_t *b)
+inline bool mat_f32_equal_shape(const mat_f32_t *a, const mat_f32_t *b)
 {
     ASSERT(a);
     ASSERT(b);
@@ -122,7 +151,7 @@ inline bool mat_f32_equal_shape(mat_f32_t *a, mat_f32_t *b)
     {
         return false;
     }
-    for (int i = 0; i < a->d; ++i)
+    for (int i = 0; i < MAX_DIMS; ++i)
     {
         if (a->s[i] != b->s[i])
         {
@@ -135,7 +164,7 @@ inline bool mat_f32_equal_shape(mat_f32_t *a, mat_f32_t *b)
 /*
  * Returns true if two values are equal
  */
-inline bool mat_f32_equal(mat_f32_t *a, mat_f32_t *b)
+inline bool mat_f32_equal(const mat_f32_t *a, const mat_f32_t *b)
 {
     ASSERT(a);
     ASSERT(b);
@@ -157,7 +186,7 @@ inline bool mat_f32_equal(mat_f32_t *a, mat_f32_t *b)
  * Reshape a matrix without changing the data
  * Assumes the number of elements is the same
  */
-void mat_f32_reshape(mat_f32_t *a, int *shape)
+void mat_f32_reshape(mat_f32_t *a, const uint32_t *shape)
 {
     ASSERT(a);
     ASSERT(shape);
@@ -186,7 +215,7 @@ void mat_f32_reshape(mat_f32_t *a, int *shape)
     a->n = n;
     a->d = d;
     for (int i = 0; i < d; i++)
-    {        
+    {
         a->s[i] = shape[i];
     }
 }
